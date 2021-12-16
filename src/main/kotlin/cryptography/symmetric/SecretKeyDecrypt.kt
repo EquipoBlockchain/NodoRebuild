@@ -7,9 +7,9 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
 class SecretKeyDecrypt {
-    var paddedPlainText: ByteArray? = null
-    var plainText: ByteArray?       = null
-    var plainTextLength             = 0
+    private var paddedPlainText : ByteArray? = null
+    var plainText               : ByteArray? = null
+    var plainTextLength                      = 0
 
     fun decrypt(
         cipherText:       ByteArray,

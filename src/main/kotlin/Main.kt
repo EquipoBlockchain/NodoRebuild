@@ -63,12 +63,12 @@ fun app(colorPalette: Colors) {
 
 @Composable
 fun bodyContent(
-    colorPalette:       Colors,
+    colorPalette: Colors,
     navItemState: MutableState<AppNavType>,
     appNavType:   AppNavType
 ) {
-    Crossfade(targetState = appNavType) { appNavType ->
-        when (appNavType) {
+    Crossfade(targetState = appNavType) {
+        when (it) {
             AppNavType.MENU     -> {
                 menuScreen(colorPalette, navItemState)
                 //menuEVAScreen(navItemState)

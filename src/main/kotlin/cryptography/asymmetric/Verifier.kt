@@ -5,7 +5,11 @@ import java.security.PublicKey
 import java.security.Security
 import java.security.Signature
 
-fun verifier(publicKey: PublicKey, message: ByteArray, signByteArray: ByteArray): Boolean {
+fun verifier(
+    publicKey:     PublicKey,
+    message:       ByteArray,
+    signByteArray: ByteArray
+): Boolean {
     //Add Bouncy Castle Provider
     Security.addProvider(BouncyCastleProvider())
     // RSA SSA - PSS 256

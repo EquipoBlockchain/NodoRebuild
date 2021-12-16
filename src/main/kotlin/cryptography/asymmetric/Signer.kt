@@ -6,7 +6,10 @@ import java.security.SecureRandom
 import java.security.Security
 import java.security.Signature
 
-fun signer(privateKey: PrivateKey, message: ByteArray): ByteArray {
+fun signer(
+    privateKey: PrivateKey,
+    message:    ByteArray
+): ByteArray {
     //Add Bouncy Castle Provider
     Security.addProvider(BouncyCastleProvider())
     // RSA SSA - PSS 256

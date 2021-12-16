@@ -20,7 +20,10 @@ import androidx.compose.ui.unit.dp
 import navigation.AppNavType
 
 @Composable
-fun loginScreen(colorPalette: Colors, navItemState: MutableState<AppNavType>) {
+fun loginScreen(
+    colorPalette: Colors,
+    navItemState: MutableState<AppNavType>
+) {
     var id          by remember { mutableStateOf("") }
     var password    by remember { mutableStateOf("") }
     var passVisible by remember { mutableStateOf(false) }

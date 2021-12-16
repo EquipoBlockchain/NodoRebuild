@@ -8,8 +8,8 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun passwordInformation(colorPalette: Colors, passwordState: PasswordState, errorDescription: String) {
-    Crossfade(targetState = passwordState) { passwordState ->
-        when (passwordState) {
+    Crossfade(targetState = passwordState) {
+        when (it) {
             PasswordState.EMPTY -> {
                 Text(
                     text = "",

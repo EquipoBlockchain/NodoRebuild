@@ -23,7 +23,10 @@ import registry.passwordConfirmation.isPasswordConfirmed
 import registry.passwordConfirmation.passwordConfirmationInformation
 
 @Composable
-fun registryScreen(colorPalette: Colors, navItemState: MutableState<AppNavType>) {
+fun registryScreen(
+    colorPalette: Colors,
+    navItemState: MutableState<AppNavType>
+) {
     var user         by remember { mutableStateOf("") }
     var id           by remember { mutableStateOf("") }
     var password1    by remember { mutableStateOf("") }
@@ -160,7 +163,7 @@ fun registryScreen(colorPalette: Colors, navItemState: MutableState<AppNavType>)
                 Spacer(modifier = Modifier.height(10.dp))
 
                 passwordConfirmationInformation(
-                    colorPalette     = colorPalette,
+                    colorPalette              = colorPalette,
                     passwordConfirmationState = passConfState.value
                 )
 
