@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
+    implementation("org.bouncycastle:bcprov-jdk15on:1.69")
 }
 
 tasks.withType<KotlinCompile> {
