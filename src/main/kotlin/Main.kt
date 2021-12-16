@@ -56,36 +56,36 @@ fun main() = application {
 }
 
 @Composable
-fun app(lightC: Colors) {
+fun app(colorPalette: Colors) {
     val navItemState = remember { mutableStateOf(AppNavType.MENU) }
-    bodyContent(lightC, navItemState , navItemState.value)
+    bodyContent(colorPalette, navItemState , navItemState.value)
 }
 
 @Composable
 fun bodyContent(
-    lightC:       Colors,
+    colorPalette:       Colors,
     navItemState: MutableState<AppNavType>,
     appNavType:   AppNavType
 ) {
     Crossfade(targetState = appNavType) { appNavType ->
         when (appNavType) {
             AppNavType.MENU     -> {
-                menuScreen(lightC, navItemState)
+                menuScreen(colorPalette, navItemState)
                 //menuEVAScreen(navItemState)
             }
             AppNavType.CHAIN     -> {
-                sideBarReturnToMenu(lightC, navItemState)
+                sideBarReturnToMenu(colorPalette, navItemState)
             }
             AppNavType.LIVE     -> {
-                sideBarReturnToMenu(lightC, navItemState)
+                sideBarReturnToMenu(colorPalette, navItemState)
             }
             AppNavType.LOGIN    -> {
-                sideBarReturnToMenu(lightC, navItemState)
-                loginScreen(lightC, navItemState)
+                sideBarReturnToMenu(colorPalette, navItemState)
+                loginScreen(colorPalette, navItemState)
             }
             AppNavType.REGISTRY -> {
-                sideBarReturnToMenu(lightC, navItemState)
-                registryScreen(lightC, navItemState)
+                sideBarReturnToMenu(colorPalette, navItemState)
+                registryScreen(colorPalette, navItemState)
             }
         }
     }
