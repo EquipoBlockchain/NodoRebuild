@@ -8,10 +8,10 @@ import javax.crypto.spec.PBEKeySpec
 
 
 class SecretKeyGenerator {
-    private val iterations       = 4096
-    private var sKey: SecretKey? = null
+    private val iterations    = 4096
+    private lateinit var sKey : SecretKey
 
-    fun getSecretKey(): SecretKey? {
+    fun getSecretKey(): SecretKey {
         return sKey
     }
 

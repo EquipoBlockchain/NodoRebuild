@@ -9,15 +9,15 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 
 class KeyPairGenerator {
-    private var keyPair: KeyPair? = null
+    private lateinit var keyPair: KeyPair
 
     fun getPublicKeyX509Encoded(): ByteArray {
-        val encodedPublicKeyX509  = X509EncodedKeySpec(keyPair!!.public.encoded)
+        val encodedPublicKeyX509  = X509EncodedKeySpec(keyPair.public.encoded)
         return encodedPublicKeyX509.encoded
     }
 
     fun getPrivateKeyPKCS8Encoded(): ByteArray {
-        val encodedPrivateKeyPKCS8 = PKCS8EncodedKeySpec(keyPair!!.private.encoded)
+        val encodedPrivateKeyPKCS8 = PKCS8EncodedKeySpec(keyPair.private.encoded)
         return encodedPrivateKeyPKCS8.encoded
     }
 

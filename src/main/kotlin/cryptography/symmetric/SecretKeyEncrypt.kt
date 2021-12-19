@@ -7,8 +7,8 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
 class SecretKeyEncrypt {
-    var cipherText: ByteArray? = null
-    var cipherTextLength       = 0
+    lateinit var cipherText : ByteArray
+    var cipherTextLength    = 0
 
     fun encrypt(
         input:          ByteArray,

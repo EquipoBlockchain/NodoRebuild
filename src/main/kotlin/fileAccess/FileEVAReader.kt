@@ -5,7 +5,7 @@ import java.io.FileInputStream
 import java.io.IOException
 
 class FileEVAReader {
-    var fileEVAToByteArray: ByteArray? = null
+    lateinit var fileEVAToByteArray: ByteArray
 
     fun readEVA(path: String, fileName: String, format: String) {
         try {

@@ -7,9 +7,9 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
 class SecretKeyDecrypt {
-    private var paddedPlainText : ByteArray? = null
-    var plainText               : ByteArray? = null
-    var plainTextLength                      = 0
+    private lateinit var paddedPlainText : ByteArray
+    lateinit var plainText               : ByteArray
+    var plainTextLength                  = 0
 
     fun decrypt(
         cipherText:       ByteArray,
@@ -27,6 +27,6 @@ class SecretKeyDecrypt {
         paddedPlainText =  ByteArray(decipher.getOutputSize(cipherTextLength))
         plainTextLength =  decipher.update(cipherText, 0, cipherTextLength, paddedPlainText, 0)
         plainTextLength += decipher.doFinal(paddedPlainText, plainTextLength)
-        plainText       = paddedPlainText!!.copyOfRange(0, plainTextLength)
+        plainText       = paddedPlainText.copyOfRange(0, plainTextLength)
     }
 }

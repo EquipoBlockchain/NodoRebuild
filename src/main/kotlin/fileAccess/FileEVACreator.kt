@@ -6,7 +6,10 @@ import java.io.IOException
 
 fun createEVA(path: String, fileName: String, format: String, input: ByteArray): Boolean {
     try {
-        val file = File("$path$fileName.$format")
+        val folder = File(path)
+        val file   = File("$path$fileName.$format")
+
+        println("MK Dir: ${folder.mkdir()}")
 
         if (file.createNewFile()) {
             val outputStream = FileOutputStream(file)

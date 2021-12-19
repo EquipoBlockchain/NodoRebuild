@@ -4,13 +4,18 @@ import cryptography.asymmetric.verifier
 import cryptography.symmetric.*
 import fileAccess.FileEVAReader
 import fileAccess.createEVA
-import java.io.*
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStreamReader
 import java.security.KeyFactory
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import kotlin.math.pow
 
 fun main() {
+    val path     = "cages/"
+    val folder = File(path)
+    println("cages emptied?: ${folder.deleteRecursively()}")
 
     print("Input password : ")
     val reader        = BufferedReader(InputStreamReader(System.`in`))
@@ -68,33 +73,29 @@ fun app(password: CharArray, j: Int) {
 
     val iVSpec = getNewInitVectorParamSpec()
 
-    sKGenInstance.getSecretKey()?.let {
-        sKEncInstance.encrypt(
-            input          = publicKeyEncodedBA,
-            secretKey      = it,
-            initVectorSpec = iVSpec
-        )
-    }
+    sKEncInstance.encrypt(
+        input          = publicKeyEncodedBA,
+        secretKey      = sKGenInstance.getSecretKey(),
+        initVectorSpec = iVSpec
+    )
 
     val cipherPublicKeyEncodedBA     = sKEncInstance.cipherText
     val cipherPublicKeyEncodedBASize = sKEncInstance.cipherTextLength
 
-    sKGenInstance.getSecretKey()?.let {
-        sKEncInstance.encrypt(
-            input          = privateKeyEncodedBA,
-            secretKey      = it,
-            initVectorSpec = iVSpec
-        )
-    }
+    sKEncInstance.encrypt(
+        input          = privateKeyEncodedBA,
+        secretKey      = sKGenInstance.getSecretKey(),
+        initVectorSpec = iVSpec
+    )
 
     val cipherPrivateKeyEncodedBA     = sKEncInstance.cipherText
     val cipherPrivateKeyEncodedBASize = sKEncInstance.cipherTextLength
 
-    val path     = "Cages/"
+    val path     = "cages/"
     val fileName = "Pilot$j"
     val format   = "EVA00Prototype"
 
-    val input    = cipherPublicKeyEncodedBA!! + cipherPrivateKeyEncodedBA!!
+    val input    = cipherPublicKeyEncodedBA + cipherPrivateKeyEncodedBA
     // TODO Replace for Byte Array conjoin (Header + Keys) P.S. Watch out for the Non NULL
 
     val wasCreated = createEVA(
@@ -114,35 +115,31 @@ fun app(password: CharArray, j: Int) {
 
     val byteArrayEVA = fEVARInstance.fileEVAToByteArray
 
-    val publicKeyFromEVA  = byteArrayEVA?.copyOfRange(0, 176)
-    val privateKeyFromEVA = byteArrayEVA?.copyOfRange(176, 816)
+    val publicKeyFromEVA  = byteArrayEVA.copyOfRange(0, 176)
+    val privateKeyFromEVA = byteArrayEVA.copyOfRange(176, 816)
 
-    publicKeyFromEVA?.let {
-        sKDecInstance.decrypt(
-            cipherText       = it,
-            cipherTextLength = cipherPublicKeyEncodedBASize,
-            secretKey        = sKGenInstance.getSecretKey()!!,
-            initVectorSpec   = iVSpec
-        )
-    }
+    sKDecInstance.decrypt(
+        cipherText       = publicKeyFromEVA,
+        cipherTextLength = cipherPublicKeyEncodedBASize,
+        secretKey        = sKGenInstance.getSecretKey(),
+        initVectorSpec   = iVSpec
+    )
 
     val decipherPublicKeyEncodedBA     = sKDecInstance.plainText
 
-    privateKeyFromEVA?.let {
-            sKDecInstance.decrypt(
-                cipherText       = it,
-                cipherTextLength = cipherPrivateKeyEncodedBASize,
-                secretKey        = sKGenInstance.getSecretKey()!!,
-                initVectorSpec   = iVSpec
-            )
-    }
+    sKDecInstance.decrypt(
+        cipherText       = privateKeyFromEVA,
+        cipherTextLength = cipherPrivateKeyEncodedBASize,
+        secretKey        = sKGenInstance.getSecretKey(),
+        initVectorSpec   = iVSpec
+    )
 
     val decipherPrivateKeyEncodedBA     = sKDecInstance.plainText
 
     println("-------------------------------------START--------------------------------------------------------------")
     println("Verified                             : $isVerified")
 
-    println("cipherPublicKeyEncodedBASize  is 176 : ${cipherPublicKeyEncodedBASize == 176}")
+    println("cipherPublicKeyEncodedBASize  is 176 : ${cipherPublicKeyEncodedBASize  == 176}")
     println("cipherPrivateKeyEncodedBASize is 640 : ${cipherPrivateKeyEncodedBASize == 640}")
 
     println("Precipher matches Decipher (public)  : ${publicKeyEncodedBA.contentEquals(decipherPublicKeyEncodedBA)}")
