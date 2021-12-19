@@ -2,6 +2,8 @@ import cryptography.asymmetric.KeyPairGenerator
 import cryptography.asymmetric.signer
 import cryptography.asymmetric.verifier
 import cryptography.symmetric.*
+import fileAccess.FileEVAReader
+import fileAccess.createEVA
 import java.io.*
 import java.security.KeyFactory
 import java.security.spec.PKCS8EncodedKeySpec
@@ -15,8 +17,8 @@ fun main() {
     val passwordInput = reader.readLine()
     val password      = passwordInput.toCharArray()
 
-    for (j in 0 until 3) {
-        app(password)
+    for (j in 0 until 5) {
+        app(password, j)
     }
 }
 
@@ -24,8 +26,9 @@ val kPGenInstance = KeyPairGenerator()
 val sKGenInstance = SecretKeyGenerator()
 val sKEncInstance = SecretKeyEncrypt()
 val sKDecInstance = SecretKeyDecrypt()
+val fEVARInstance = FileEVAReader()
 
-fun app(password: CharArray): Unit {
+fun app(password: CharArray, j: Int) {
     kPGenInstance.generate()
 
     val messageSize = 2.0.pow(10.0).toInt()
@@ -65,44 +68,74 @@ fun app(password: CharArray): Unit {
 
     val iVSpec = getNewInitVectorParamSpec()
 
-    sKEncInstance.encrypt(
-        input          = publicKeyEncodedBA,
-        secretKey      = sKGenInstance.getSecretKey()!!,
-        initVectorSpec = iVSpec
-    )
+    sKGenInstance.getSecretKey()?.let {
+        sKEncInstance.encrypt(
+            input          = publicKeyEncodedBA,
+            secretKey      = it,
+            initVectorSpec = iVSpec
+        )
+    }
 
     val cipherPublicKeyEncodedBA     = sKEncInstance.cipherText
     val cipherPublicKeyEncodedBASize = sKEncInstance.cipherTextLength
 
-    sKEncInstance.encrypt(
-        input          = privateKeyEncodedBA,
-        secretKey      = sKGenInstance.getSecretKey()!!,
-        initVectorSpec = iVSpec
-    )
+    sKGenInstance.getSecretKey()?.let {
+        sKEncInstance.encrypt(
+            input          = privateKeyEncodedBA,
+            secretKey      = it,
+            initVectorSpec = iVSpec
+        )
+    }
 
     val cipherPrivateKeyEncodedBA     = sKEncInstance.cipherText
     val cipherPrivateKeyEncodedBASize = sKEncInstance.cipherTextLength
 
-    writeToEVA(
-        cipherPublicKeyEncodedBA!!,
-        cipherPrivateKeyEncodedBA!!
+    val path     = "Cages/"
+    val fileName = "Pilot$j"
+    val format   = "EVA00Prototype"
+
+    val input    = cipherPublicKeyEncodedBA!! + cipherPrivateKeyEncodedBA!!
+    // TODO Replace for Byte Array conjoin (Header + Keys) P.S. Watch out for the Non NULL
+
+    val wasCreated = createEVA(
+        path     = path,
+        fileName = fileName,
+        format   = format,
+        input    = input
     )
 
-    sKDecInstance.decrypt(
-        cipherText       = cipherPublicKeyEncodedBA!!,
-        cipherTextLength = cipherPublicKeyEncodedBASize,
-        secretKey        = sKGenInstance.getSecretKey()!!,
-        initVectorSpec   = iVSpec
+    println("wasCreated? : $wasCreated")
+
+    fEVARInstance.readEVA(
+        path     = path,
+        fileName = fileName,
+        format   = format
     )
+
+    val byteArrayEVA = fEVARInstance.fileEVAToByteArray
+
+    val publicKeyFromEVA  = byteArrayEVA?.copyOfRange(0, 176)
+    val privateKeyFromEVA = byteArrayEVA?.copyOfRange(176, 816)
+
+    publicKeyFromEVA?.let {
+        sKDecInstance.decrypt(
+            cipherText       = it,
+            cipherTextLength = cipherPublicKeyEncodedBASize,
+            secretKey        = sKGenInstance.getSecretKey()!!,
+            initVectorSpec   = iVSpec
+        )
+    }
 
     val decipherPublicKeyEncodedBA     = sKDecInstance.plainText
 
-    sKDecInstance.decrypt(
-        cipherText       = cipherPrivateKeyEncodedBA!!,
-        cipherTextLength = cipherPrivateKeyEncodedBASize,
-        secretKey        = sKGenInstance.getSecretKey()!!,
-        initVectorSpec   = iVSpec
-    )
+    privateKeyFromEVA?.let {
+            sKDecInstance.decrypt(
+                cipherText       = it,
+                cipherTextLength = cipherPrivateKeyEncodedBASize,
+                secretKey        = sKGenInstance.getSecretKey()!!,
+                initVectorSpec   = iVSpec
+            )
+    }
 
     val decipherPrivateKeyEncodedBA     = sKDecInstance.plainText
 
@@ -115,35 +148,4 @@ fun app(password: CharArray): Unit {
     println("Precipher matches Decipher (public)  : ${publicKeyEncodedBA.contentEquals(decipherPublicKeyEncodedBA)}")
     println("Precipher matches Decipher (private) : ${privateKeyEncodedBA.contentEquals(decipherPrivateKeyEncodedBA)}")
     println("-------------------------------------END----------------------------------------------------------------")
-}
-
-fun writeToEVA(
-    encPublicKeyBA:  ByteArray,
-    encPrivateKeyBA: ByteArray,
-): Unit {
-    try {
-        val byteFile = File("Pilot00.eva")
-
-        if (byteFile.createNewFile()) {
-            println("El archivo no existe")
-            val outputStream = FileOutputStream(byteFile)
-            outputStream.write(encPublicKeyBA)
-            outputStream.write(encPrivateKeyBA)
-            outputStream.close()
-            println("Ahora si")
-        } else {
-            println("El archivo existia")
-            byteFile.delete()
-            println("Ya no")
-            byteFile.createNewFile()
-            val outputStream = FileOutputStream(byteFile)
-            outputStream.write(encPublicKeyBA)
-            outputStream.write(encPrivateKeyBA)
-            outputStream.close()
-            println("Otravez existe")
-        }
-        println("Si se guardo perro")
-    } catch (e: IOException) {
-        println("No se guardo perro")
-    }
 }
