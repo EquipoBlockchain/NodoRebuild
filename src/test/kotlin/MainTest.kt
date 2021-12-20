@@ -4,13 +4,13 @@ import cryptography.asymmetric.verifier
 import cryptography.symmetric.*
 import fileAccess.FileEVAReader
 import fileAccess.createEVA
+import fileAccess.getExampleMessage
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.security.KeyFactory
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
-import kotlin.math.pow
 
 fun main() {
     val path     = "cages/"
@@ -34,14 +34,10 @@ val sKDecInstance = SecretKeyDecrypt()
 val fEVARInstance = FileEVAReader()
 
 fun app(password: CharArray, j: Int) {
-    kPGenInstance.generate()
 
-    val messageSize = 2.0.pow(10.0).toInt()
-    //println("Message Size : $messageSize")
-    val message = ByteArray(messageSize)
-    for (i in 0 until messageSize) {
-        message[i] = 'a'.code.toByte()
-    }
+    val message = getExampleMessage()
+
+    kPGenInstance.generate()
 
     val publicKeyEncodedBA  = kPGenInstance.getPublicKeyX509Encoded()
     val privateKeyEncodedBA = kPGenInstance.getPrivateKeyPKCS8Encoded()
@@ -49,8 +45,8 @@ fun app(password: CharArray, j: Int) {
     val keyFactoryInstance  = KeyFactory.getInstance("RSA", "BC")
 
     // Private key recovered from PKCS8EncodedKeySpec
-    val privateKeyPKCS8Enc  = PKCS8EncodedKeySpec(privateKeyEncodedBA)
-    val recoveredPrivateKey = keyFactoryInstance.generatePrivate(privateKeyPKCS8Enc)
+    val privateKeyPKCS8Encoded = PKCS8EncodedKeySpec(privateKeyEncodedBA)
+    val recoveredPrivateKey    = keyFactoryInstance.generatePrivate(privateKeyPKCS8Encoded)
 
     val signResult = signer(
         privateKey = recoveredPrivateKey,
@@ -58,8 +54,8 @@ fun app(password: CharArray, j: Int) {
     )
 
     // Public key recovered from X509EncodedKeySpec
-    val publicKeyX509Enc    = X509EncodedKeySpec(publicKeyEncodedBA)
-    val recoveredPublicKey  = keyFactoryInstance.generatePublic(publicKeyX509Enc)
+    val publicKeyX509Encoded = X509EncodedKeySpec(publicKeyEncodedBA)
+    val recoveredPublicKey   = keyFactoryInstance.generatePublic(publicKeyX509Encoded)
 
     val isVerified = verifier(
         publicKey     = recoveredPublicKey,
@@ -74,7 +70,7 @@ fun app(password: CharArray, j: Int) {
     val iVSpec = getNewInitVectorParamSpec()
 
     sKEncInstance.encrypt(
-        input          = publicKeyEncodedBA,
+        input          = publicKeyX509Encoded.encoded,
         secretKey      = sKGenInstance.getSecretKey(),
         initVectorSpec = iVSpec
     )
@@ -83,7 +79,7 @@ fun app(password: CharArray, j: Int) {
     val cipherPublicKeyEncodedBASize = sKEncInstance.cipherTextLength
 
     sKEncInstance.encrypt(
-        input          = privateKeyEncodedBA,
+        input          = privateKeyPKCS8Encoded.encoded,
         secretKey      = sKGenInstance.getSecretKey(),
         initVectorSpec = iVSpec
     )
@@ -115,26 +111,28 @@ fun app(password: CharArray, j: Int) {
 
     val byteArrayEVA = fEVARInstance.fileEVAToByteArray
 
-    val publicKeyFromEVA  = byteArrayEVA.copyOfRange(0, 176)
-    val privateKeyFromEVA = byteArrayEVA.copyOfRange(176, 816)
+    val cipherPublicKeyX509EncodedFromEVA   = byteArrayEVA.copyOfRange(0, 176)
+    val cipherPrivateKeyPKCS8EncodedFromEVA = byteArrayEVA.copyOfRange(176, 816)
 
     sKDecInstance.decrypt(
-        cipherText       = publicKeyFromEVA,
-        cipherTextLength = cipherPublicKeyEncodedBASize,
+        cipherText       = cipherPublicKeyX509EncodedFromEVA,
+        cipherTextLength = 176,
         secretKey        = sKGenInstance.getSecretKey(),
         initVectorSpec   = iVSpec
     )
 
-    val decipherPublicKeyEncodedBA     = sKDecInstance.plainText
+    val decipherPublicKeyX509EncodedBA = sKDecInstance.plainText
+    val decipherPublicKeyDecoded       = keyFactoryInstance.generatePublic(X509EncodedKeySpec(decipherPublicKeyX509EncodedBA))
 
     sKDecInstance.decrypt(
-        cipherText       = privateKeyFromEVA,
-        cipherTextLength = cipherPrivateKeyEncodedBASize,
+        cipherText       = cipherPrivateKeyPKCS8EncodedFromEVA,
+        cipherTextLength = 640,
         secretKey        = sKGenInstance.getSecretKey(),
         initVectorSpec   = iVSpec
     )
 
-    val decipherPrivateKeyEncodedBA     = sKDecInstance.plainText
+    val decipherPrivateKeyPKCS8EncodedBA = sKDecInstance.plainText
+    val decipherPrivateKeyDecoded        = keyFactoryInstance.generatePrivate(PKCS8EncodedKeySpec(decipherPrivateKeyPKCS8EncodedBA))
 
     println("-------------------------------------START--------------------------------------------------------------")
     println("Verified                             : $isVerified")
@@ -142,7 +140,7 @@ fun app(password: CharArray, j: Int) {
     println("cipherPublicKeyEncodedBASize  is 176 : ${cipherPublicKeyEncodedBASize  == 176}")
     println("cipherPrivateKeyEncodedBASize is 640 : ${cipherPrivateKeyEncodedBASize == 640}")
 
-    println("Precipher matches Decipher (public)  : ${publicKeyEncodedBA.contentEquals(decipherPublicKeyEncodedBA)}")
-    println("Precipher matches Decipher (private) : ${privateKeyEncodedBA.contentEquals(decipherPrivateKeyEncodedBA)}")
+    println("Recovered matches Decipher-Decoded (public)  : ${recoveredPublicKey.equals(decipherPublicKeyDecoded)}")
+    println("Recovered matches Decipher-Decoded (private) : ${recoveredPrivateKey.equals(decipherPrivateKeyDecoded)}")
     println("-------------------------------------END----------------------------------------------------------------")
 }

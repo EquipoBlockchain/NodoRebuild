@@ -1,6 +1,7 @@
 package cryptography.symmetric
 
 fun getNewSalt(): ByteArray {
+    //TODO SecureRandom 16-byte salt generator
     val provisionalSalt = byteArrayOf(
         0x7D.toByte(),
         0x60.toByte(),
