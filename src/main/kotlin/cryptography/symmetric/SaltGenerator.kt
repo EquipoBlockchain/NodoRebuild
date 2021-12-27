@@ -1,24 +1,19 @@
 package cryptography.symmetric
 
+import java.security.SecureRandom
+
+/**
+ * Generates an array of 16 bytes, using a [SecureRandom] object
+ * to be used as cryptographic salt.
+ *
+ * @return [ByteArray] corresponding to a 16-byte salt.
+ * @see SecureRandom
+ */
 fun getNewSalt(): ByteArray {
-    //TODO SecureRandom 16-byte salt generator
-    val provisionalSalt = byteArrayOf(
-        0x7D.toByte(),
-        0x60.toByte(),
-        0x43.toByte(),
-        0x5F.toByte(),
-        0x02.toByte(),
-        0xE9.toByte(),
-        0xE0.toByte(),
-        0xAE.toByte(),
-        0x7D.toByte(),
-        0x60.toByte(),
-        0x43.toByte(),
-        0x5F.toByte(),
-        0x02.toByte(),
-        0xE9.toByte(),
-        0xE0.toByte(),
-        0xAE.toByte()
-    )
-    return provisionalSalt
+    val secureRandom = SecureRandom()
+    val salt         = ByteArray(size = 16)
+
+    secureRandom.nextBytes(salt)
+
+    return salt
 }

@@ -6,27 +6,49 @@ import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
-class SecretKeyDecrypt {
-    private lateinit var paddedPlainText : ByteArray
-    lateinit var plainText               : ByteArray
-    var plainTextLength                  = 0
+/**
+ * This class allows to decrypt a given input, obtaining a deciphered [ByteArray] and its calculated length as an
+ * [Integer].
+ *
+ * - [paddedPlainBytes] Used internally to store the byte array resulting from the decryption.
+ * - [plainBytes] Used to store the decrypted byte array after padding is removed.
+ * - [plainBytesLength] Used to store the calculated length to determine byte array size after padding is removed.
+ *
+ * @see Cipher
+ */
 
+class SecretKeyDecrypt {
+    private lateinit var paddedPlainBytes : ByteArray
+    lateinit var plainBytes               : ByteArray
+    var plainBytesLength                  = 0
+
+    /**
+     * Decrypts a provided byte array with the AES CBC algorithm and a PKCS #7 padding utilizing the Bouncy Castle
+     * Provider.
+     *
+     * @param cipherBytes The [ByteArray] to be encrypted.
+     * @param cipherBytesLength The size of the encrypted [ByteArray].
+     * @param secretKey The [SecretKey] used for encryption.
+     * @param initVectorBytes The initialization bytes to be used in the decryption.
+     * @see Cipher
+     * @see IvParameterSpec
+     */
     fun decrypt(
-        cipherText:       ByteArray,
-        cipherTextLength: Int,
-        secretKey:        SecretKey,
-        initVectorSpec:   IvParameterSpec
+        cipherBytes       : ByteArray,
+        cipherBytesLength : Int,
+        secretKey         : SecretKey,
+        initVectorBytes   : ByteArray
     ) {
         //Add Bouncy Castle Provider
         Security.addProvider(BouncyCastleProvider())
 
-        val decipher = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC")
-
+        val decipher       = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC")
+        val initVectorSpec = IvParameterSpec(initVectorBytes)
         decipher.init(Cipher.DECRYPT_MODE, secretKey, initVectorSpec)
 
-        paddedPlainText =  ByteArray(decipher.getOutputSize(cipherTextLength))
-        plainTextLength =  decipher.update(cipherText, 0, cipherTextLength, paddedPlainText, 0)
-        plainTextLength += decipher.doFinal(paddedPlainText, plainTextLength)
-        plainText       = paddedPlainText.copyOfRange(0, plainTextLength)
+        paddedPlainBytes =  ByteArray(decipher.getOutputSize(cipherBytesLength))
+        plainBytesLength =  decipher.update(cipherBytes, 0, cipherBytesLength, paddedPlainBytes, 0)
+        plainBytesLength += decipher.doFinal(paddedPlainBytes, plainBytesLength)
+        plainBytes       =  paddedPlainBytes.copyOfRange(0, plainBytesLength)
     }
 }

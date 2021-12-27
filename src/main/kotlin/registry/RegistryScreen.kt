@@ -22,6 +22,20 @@ import registry.passwordConfirmation.PasswordConfirmationState
 import registry.passwordConfirmation.isPasswordConfirmed
 import registry.passwordConfirmation.passwordConfirmationInformation
 
+/**
+ * Displays registry screen and captures the user's input.
+ *
+ * Data captured:
+ * - User
+ * - Identification code
+ * - Password
+ * - Password for confirmation
+ *
+ * @param colorPalette Colors used for the Material Theme.
+ * @param navItemState Mutable value holder for used for navigation between screens.
+ *
+ */
+
 @Composable
 fun registryScreen(
     colorPalette: Colors,
@@ -31,6 +45,7 @@ fun registryScreen(
     var id           by remember { mutableStateOf("") }
     var password1    by remember { mutableStateOf("") }
     var password2    by remember { mutableStateOf("") }
+
     var passVisible1 by remember { mutableStateOf(false) }
     var passVisible2 by remember { mutableStateOf(false) }
 

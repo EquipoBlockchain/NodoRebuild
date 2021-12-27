@@ -12,15 +12,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+/**
+ * Displays a sidebar with a button to return to the main menu.
+ *
+ * @param colorPalette Colors used for the Material Theme.
+ *
+ * @param navItemState Mutable value holder for used for navigation between screens.
+ *
+ */
+
 @Composable
 fun sideBarReturnToMenu(
-    lightC: Colors,
+    colorPalette: Colors,
     navItemState: MutableState<AppNavType>,
 ) {
     val back = "Regresar a menu"
 
     MaterialTheme(
-        colors = lightC
+        colors = colorPalette
     ) {
         Column(
             modifier = Modifier.fillMaxHeight(),

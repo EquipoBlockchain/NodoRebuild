@@ -1,13 +1,20 @@
 package cryptography.symmetric
 
-import javax.crypto.spec.IvParameterSpec
+import java.security.SecureRandom
 
-fun getNewInitVectorParamSpec(): IvParameterSpec {
-    //TODO SecureRandom 16-byte IVBytes generator
-    val provisionalIVBytes = byteArrayOf(
-        0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00,
-        0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00
-    )
+/**
+ * Generates an array of 16 bytes, using a [SecureRandom] object
+ * to be used as a cryptographic initialization vector.
+ *
+ * @return [ByteArray] corresponding to a 16-byte initialization vector.
+ * @see SecureRandom
+ */
 
-    return IvParameterSpec(provisionalIVBytes)
+fun getNewInitVectorBytes(): ByteArray {
+    val secureRandom    = SecureRandom()
+    val initVectorBytes = ByteArray(size = 16)
+
+    secureRandom.nextBytes(initVectorBytes)
+
+    return initVectorBytes
 }

@@ -13,8 +13,10 @@ fun createEVA(path: String, fileName: String, format: String, input: ByteArray):
 
         if (file.createNewFile()) {
             val outputStream = FileOutputStream(file)
-            outputStream.write(input)
-            outputStream.close()
+            outputStream.run {
+                write(input)
+                close()
+            }
             return true
         }
     } catch (e: IOException) {

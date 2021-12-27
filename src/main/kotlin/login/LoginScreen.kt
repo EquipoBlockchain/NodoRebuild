@@ -19,6 +19,19 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import navigation.AppNavType
 
+/**
+ * Displays log in screen and captures the user's input.
+ *
+ * Data captured:
+ * - User
+ * - Password
+ *
+ * @param colorPalette Colors used for the Material Theme.
+ *
+ * @param navItemState Mutable value holder for used for navigation between screens.
+ *
+ */
+
 @Composable
 fun loginScreen(
     colorPalette: Colors,

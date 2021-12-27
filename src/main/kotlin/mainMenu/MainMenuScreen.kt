@@ -11,6 +11,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import navigation.AppNavType
 
+/**
+ * Displays main menu screen to navigate through the app.
+ *
+ * Options:
+ * - Previous voting results
+ * - Current voting process state
+ * - Vote in current voting process
+ *
+ * @param colorPalette Colors used for the Material Theme.
+ *
+ * @param navItemState Mutable value holder for used for navigation between screens.
+ *
+ */
+
 @Composable
 fun menuScreen(
     colorPalette: Colors,

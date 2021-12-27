@@ -27,11 +27,12 @@ fun main() {
     }
 }
 
-val kPGenInstance = KeyPairGenerator()
-val sKGenInstance = SecretKeyGenerator()
-val sKEncInstance = SecretKeyEncrypt()
-val sKDecInstance = SecretKeyDecrypt()
-val fEVARInstance = FileEVAReader()
+val kPGenInstance  = KeyPairGenerator()
+val sKGenInstance  = SecretKeyGenerator()
+val sKGenInstance2 = SecretKeyGenerator()
+val sKEncInstance  = SecretKeyEncrypt()
+val sKDecInstance  = SecretKeyDecrypt()
+val fEVARInstance  = FileEVAReader()
 
 fun app(password: CharArray, j: Int) {
 
@@ -44,54 +45,48 @@ fun app(password: CharArray, j: Int) {
 
     val keyFactoryInstance  = KeyFactory.getInstance("RSA", "BC")
 
-    // Private key recovered from PKCS8EncodedKeySpec
-    val privateKeyPKCS8Encoded = PKCS8EncodedKeySpec(privateKeyEncodedBA)
-    val recoveredPrivateKey    = keyFactoryInstance.generatePrivate(privateKeyPKCS8Encoded)
-
     val signResult = signer(
-        privateKey = recoveredPrivateKey,
-        message    = message
+        encodedPrivateKey = privateKeyEncodedBA,
+        message           = message
     )
 
-    // Public key recovered from X509EncodedKeySpec
-    val publicKeyX509Encoded = X509EncodedKeySpec(publicKeyEncodedBA)
-    val recoveredPublicKey   = keyFactoryInstance.generatePublic(publicKeyX509Encoded)
-
     val isVerified = verifier(
-        publicKey     = recoveredPublicKey,
-        message       = message,
-        signByteArray = signResult
+        encodedPublicKey = publicKeyEncodedBA,
+        message          = message,
+        signature    = signResult
     )
 
     val salt = getNewSalt()
 
+    // TODO Check for viability of adding pepper
+
     sKGenInstance.generate(password, salt)
 
-    val iVSpec = getNewInitVectorParamSpec()
+    val initVectorBytes = getNewInitVectorBytes()
 
     sKEncInstance.encrypt(
-        input          = publicKeyX509Encoded.encoded,
+        input          = publicKeyEncodedBA,
         secretKey      = sKGenInstance.getSecretKey(),
-        initVectorSpec = iVSpec
+        initVectorBytes = initVectorBytes
     )
 
-    val cipherPublicKeyEncodedBA     = sKEncInstance.cipherText
-    val cipherPublicKeyEncodedBASize = sKEncInstance.cipherTextLength
+    val cipherPublicKeyEncodedBA     = sKEncInstance.cipherBytes
+    val cipherPublicKeyEncodedBASize = sKEncInstance.cipherBytesLength
 
     sKEncInstance.encrypt(
-        input          = privateKeyPKCS8Encoded.encoded,
+        input          = privateKeyEncodedBA,
         secretKey      = sKGenInstance.getSecretKey(),
-        initVectorSpec = iVSpec
+        initVectorBytes = initVectorBytes
     )
 
-    val cipherPrivateKeyEncodedBA     = sKEncInstance.cipherText
-    val cipherPrivateKeyEncodedBASize = sKEncInstance.cipherTextLength
+    val cipherPrivateKeyEncodedBA     = sKEncInstance.cipherBytes
+    val cipherPrivateKeyEncodedBASize = sKEncInstance.cipherBytesLength
 
     val path     = "cages/"
     val fileName = "Pilot$j"
     val format   = "EVA00Prototype"
 
-    val input    = cipherPublicKeyEncodedBA + cipherPrivateKeyEncodedBA
+    val input    = salt + initVectorBytes + cipherPublicKeyEncodedBA + cipherPrivateKeyEncodedBA
     // TODO Replace for Byte Array conjoin (Header + Keys) P.S. Watch out for the Non NULL
 
     val wasCreated = createEVA(
@@ -111,27 +106,31 @@ fun app(password: CharArray, j: Int) {
 
     val byteArrayEVA = fEVARInstance.fileEVAToByteArray
 
-    val cipherPublicKeyX509EncodedFromEVA   = byteArrayEVA.copyOfRange(0, 176)
-    val cipherPrivateKeyPKCS8EncodedFromEVA = byteArrayEVA.copyOfRange(176, 816)
+    val saltFromEVA                         = byteArrayEVA.copyOfRange(0, 16)     //16
+    val initVectorBytesFromEVA              = byteArrayEVA.copyOfRange(16, 32)    //16
+    val cipherPublicKeyX509EncodedFromEVA   = byteArrayEVA.copyOfRange(32, 208)   //176
+    val cipherPrivateKeyPKCS8EncodedFromEVA = byteArrayEVA.copyOfRange(208, 848)  //640
+
+    sKGenInstance2.generate(password, saltFromEVA)
 
     sKDecInstance.decrypt(
-        cipherText       = cipherPublicKeyX509EncodedFromEVA,
-        cipherTextLength = 176,
-        secretKey        = sKGenInstance.getSecretKey(),
-        initVectorSpec   = iVSpec
+        cipherBytes       = cipherPublicKeyX509EncodedFromEVA,
+        cipherBytesLength = 176,
+        secretKey         = sKGenInstance2.getSecretKey(),
+        initVectorBytes   = initVectorBytesFromEVA
     )
 
-    val decipherPublicKeyX509EncodedBA = sKDecInstance.plainText
+    val decipherPublicKeyX509EncodedBA = sKDecInstance.plainBytes
     val decipherPublicKeyDecoded       = keyFactoryInstance.generatePublic(X509EncodedKeySpec(decipherPublicKeyX509EncodedBA))
 
     sKDecInstance.decrypt(
-        cipherText       = cipherPrivateKeyPKCS8EncodedFromEVA,
-        cipherTextLength = 640,
-        secretKey        = sKGenInstance.getSecretKey(),
-        initVectorSpec   = iVSpec
+        cipherBytes       = cipherPrivateKeyPKCS8EncodedFromEVA,
+        cipherBytesLength = 640,
+        secretKey         = sKGenInstance2.getSecretKey(),
+        initVectorBytes   = initVectorBytesFromEVA
     )
 
-    val decipherPrivateKeyPKCS8EncodedBA = sKDecInstance.plainText
+    val decipherPrivateKeyPKCS8EncodedBA = sKDecInstance.plainBytes
     val decipherPrivateKeyDecoded        = keyFactoryInstance.generatePrivate(PKCS8EncodedKeySpec(decipherPrivateKeyPKCS8EncodedBA))
 
     println("-------------------------------------START--------------------------------------------------------------")
@@ -139,8 +138,6 @@ fun app(password: CharArray, j: Int) {
 
     println("cipherPublicKeyEncodedBASize  is 176 : ${cipherPublicKeyEncodedBASize  == 176}")
     println("cipherPrivateKeyEncodedBASize is 640 : ${cipherPrivateKeyEncodedBASize == 640}")
-
-    println("Recovered matches Decipher-Decoded (public)  : ${recoveredPublicKey.equals(decipherPublicKeyDecoded)}")
-    println("Recovered matches Decipher-Decoded (private) : ${recoveredPrivateKey.equals(decipherPrivateKeyDecoded)}")
     println("-------------------------------------END----------------------------------------------------------------")
+
 }
