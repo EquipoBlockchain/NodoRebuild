@@ -21,7 +21,6 @@ import java.security.spec.X509EncodedKeySpec
  * @see X509EncodedKeySpec
  * @see PKCS8EncodedKeySpec
  */
-
 class KeyPairGenerator {
     private lateinit var keyPair: KeyPair
 
@@ -52,7 +51,7 @@ class KeyPairGenerator {
      * @see KeyPairGenerator
      */
     fun generate() {
-        //Add Bouncy Castle Provider
+        // Add Bouncy Castle Provider
         Security.addProvider(BouncyCastleProvider())
 
         val keyGen = KeyPairGenerator.getInstance("RSA", "BC")

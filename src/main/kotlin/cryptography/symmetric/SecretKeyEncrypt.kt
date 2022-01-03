@@ -7,7 +7,8 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
 /**
- * This class allows to encrypt a given input, obtaining a ciphered [ByteArray] and its calculated length as an [Integer].
+ * This class allows to encrypt a given input, obtaining a ciphered [ByteArray] and its calculated length as an
+ * [Integer].
  *
  * - [cipherBytes] Used to store the byte array resulting from the encryption.
  * - [cipherBytesLength] Used to store the calculated length.
@@ -33,7 +34,7 @@ class SecretKeyEncrypt {
         secretKey       : SecretKey,
         initVectorBytes : ByteArray
     ) {
-        //Add Bouncy Castle Provider
+        // Add Bouncy Castle Provider
         Security.addProvider(BouncyCastleProvider())
 
         val cipher         = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC")

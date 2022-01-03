@@ -12,7 +12,7 @@ fun passwordInformation(colorPalette: Colors, passwordState: PasswordState, erro
         when (it) {
             PasswordState.EMPTY -> {
                 Text(
-                    text = "",
+                    text  = "",
                     color = Color.Transparent
                 )
             }

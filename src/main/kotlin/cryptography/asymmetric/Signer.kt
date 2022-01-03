@@ -13,20 +13,20 @@ import java.security.spec.PKCS8EncodedKeySpec
  * @param encodedPrivateKey Used by the [KeyFactory] to recover the [PrivateKey].
  * @param message Message to be signed.
  * @return [ByteArray] corresponding to the signature.
+ * @see PrivateKey
  * @see Signature
  * @see KeyFactory
- * @see PrivateKey
+ * @see PKCS8EncodedKeySpec
  */
-
 fun signer(
-    encodedPrivateKey: ByteArray,
-    message: ByteArray
+    encodedPrivateKey : ByteArray,
+    message           : ByteArray
 ): ByteArray {
-    //Add Bouncy Castle Provider
+    // Add Bouncy Castle Provider
     Security.addProvider(BouncyCastleProvider())
     // RSA SSA - PSS 256
-    val signatureInstance = Signature.getInstance("SHA256withRSAandMGF1", "BC")
-    val keyFactoryInstance = KeyFactory.getInstance("RSA", "BC")
+    val signatureInstance   = Signature.getInstance("SHA256withRSAandMGF1", "BC")
+    val keyFactoryInstance  = KeyFactory.getInstance("RSA", "BC")
     val privateKeyPKCS8Spec = PKCS8EncodedKeySpec(encodedPrivateKey)
     val recoveredPrivateKey = keyFactoryInstance.generatePrivate(privateKeyPKCS8Spec)
 

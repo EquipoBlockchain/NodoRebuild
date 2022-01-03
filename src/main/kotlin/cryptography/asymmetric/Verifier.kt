@@ -14,17 +14,17 @@ import java.security.spec.X509EncodedKeySpec
  * @param message Message to be verified.
  * @param signature Signature corresponding to the message.
  * @return [Boolean] where true means the message was correctly verified.
+ * @see PublicKey
  * @see Signature
  * @see KeyFactory
- * @see PublicKey
+ * @see X509EncodedKeySpec
  */
-
 fun verifier(
     encodedPublicKey : ByteArray,
     message          : ByteArray,
     signature        : ByteArray
 ): Boolean {
-    //Add Bouncy Castle Provider
+    // Add Bouncy Castle Provider
     Security.addProvider(BouncyCastleProvider())
     // RSA SSA - PSS 256
     val signatureInstance  = Signature.getInstance("SHA256withRSAandMGF1", "BC")

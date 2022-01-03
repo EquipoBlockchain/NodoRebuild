@@ -12,7 +12,7 @@ fun passwordConfirmationInformation(colorPalette: Colors, passwordConfirmationSt
         when (it) {
             PasswordConfirmationState.EMPTY -> {
                 Text(
-                    text = "",
+                    text  = "",
                     color = Color.Transparent
                 )
             }

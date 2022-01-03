@@ -39,7 +39,7 @@ class SecretKeyGenerator {
         password: CharArray,
         salt:     ByteArray
     ) {
-        //Add Bouncy Castle Provider
+        // Add Bouncy Castle Provider
         Security.addProvider(BouncyCastleProvider())
 
         val keyFact = SecretKeyFactory.getInstance("PBEWITHSHA256AND256BITAES-CBC-BC", "BC")

@@ -53,11 +53,17 @@ fun app(password: CharArray, j: Int) {
     val isVerified = verifier(
         encodedPublicKey = publicKeyEncodedBA,
         message          = message,
-        signature    = signResult
+        signature        = signResult
     )
 
-    val salt = getNewSalt()
+    val user          = "Usuario123456789" //16 bytes
+    val userByteArray = user.toByteArray(Charsets.UTF_8)
+    // TODO padding to 16 bytes
 
+    val id            = "ABCD1234"
+    val idByteArray   = id.toByteArray(Charsets.UTF_8)
+
+    val salt = getNewSalt()
     // TODO Check for viability of adding pepper
 
     sKGenInstance.generate(password, salt)
@@ -86,14 +92,16 @@ fun app(password: CharArray, j: Int) {
     val fileName = "Pilot$j"
     val format   = "EVA00Prototype"
 
-    val input    = salt + initVectorBytes + cipherPublicKeyEncodedBA + cipherPrivateKeyEncodedBA
-    // TODO Replace for Byte Array conjoin (Header + Keys) P.S. Watch out for the Non NULL
-
     val wasCreated = createEVA(
-        path     = path,
-        fileName = fileName,
-        format   = format,
-        input    = input
+        path                         = path,
+        fileName                     = fileName,
+        format                       = format,
+        user                         = userByteArray,
+        id                           = idByteArray,
+        salt                         = salt,
+        initVectorBytes              = initVectorBytes,
+        cipherPublicKeyX509Encoded   = cipherPublicKeyEncodedBA,
+        cipherPrivateKeyPKCS8Encoded = cipherPrivateKeyEncodedBA
     )
 
     println("wasCreated? : $wasCreated")
@@ -104,12 +112,12 @@ fun app(password: CharArray, j: Int) {
         format   = format
     )
 
-    val byteArrayEVA = fEVARInstance.fileEVAToByteArray
-
-    val saltFromEVA                         = byteArrayEVA.copyOfRange(0, 16)     //16
-    val initVectorBytesFromEVA              = byteArrayEVA.copyOfRange(16, 32)    //16
-    val cipherPublicKeyX509EncodedFromEVA   = byteArrayEVA.copyOfRange(32, 208)   //176
-    val cipherPrivateKeyPKCS8EncodedFromEVA = byteArrayEVA.copyOfRange(208, 848)  //640
+    val userFromEVA                         = fEVARInstance.user
+    val idFromEVA                           = fEVARInstance.id
+    val saltFromEVA                         = fEVARInstance.salt
+    val initVectorBytesFromEVA              = fEVARInstance.initVectorBytes
+    val cipherPublicKeyX509EncodedFromEVA   = fEVARInstance.cipherPublicKeyX509Encoded
+    val cipherPrivateKeyPKCS8EncodedFromEVA = fEVARInstance.cipherPrivateKeyPKCS8Encoded
 
     sKGenInstance2.generate(password, saltFromEVA)
 
@@ -136,8 +144,13 @@ fun app(password: CharArray, j: Int) {
     println("-------------------------------------START--------------------------------------------------------------")
     println("Verified                             : $isVerified")
 
+    println("User : ${userFromEVA.toString(Charsets.UTF_8)}")
+    println("ID   : ${idFromEVA.toString(Charsets.UTF_8)}")
+
     println("cipherPublicKeyEncodedBASize  is 176 : ${cipherPublicKeyEncodedBASize  == 176}")
     println("cipherPrivateKeyEncodedBASize is 640 : ${cipherPrivateKeyEncodedBASize == 640}")
+    println("is publicKeyEncodedBA  = decipherPublicKeyX509EncodedBA   : ${publicKeyEncodedBA.contentEquals(decipherPublicKeyX509EncodedBA)}")
+    println("is privateKeyEncodedBA = decipherPrivateKeyPKCS8EncodedBA : ${privateKeyEncodedBA.contentEquals(decipherPrivateKeyPKCS8EncodedBA)}")
     println("-------------------------------------END----------------------------------------------------------------")
 
 }

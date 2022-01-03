@@ -20,11 +20,9 @@ import navigation.AppNavType
  * - Vote in current voting process
  *
  * @param colorPalette Colors used for the Material Theme.
- *
  * @param navItemState Mutable value holder for used for navigation between screens.
  *
  */
-
 @Composable
 fun menuScreen(
     colorPalette: Colors,
