@@ -21,6 +21,9 @@ import registry.password.passwordInformation
 import registry.passwordConfirmation.PasswordConfirmationState
 import registry.passwordConfirmation.isPasswordConfirmed
 import registry.passwordConfirmation.passwordConfirmationInformation
+import registry.user.UserState
+import registry.user.isUserSizeValid
+import registry.user.userInformation
 
 /**
  * Displays registry screen and captures the user's input.
@@ -35,7 +38,6 @@ import registry.passwordConfirmation.passwordConfirmationInformation
  * @param navItemState Mutable value holder for used for navigation between screens.
  *
  */
-
 @Composable
 fun registryScreen(
     colorPalette: Colors,
@@ -49,6 +51,7 @@ fun registryScreen(
     var passVisible1 by remember { mutableStateOf(false) }
     var passVisible2 by remember { mutableStateOf(false) }
 
+    val userState     = remember { mutableStateOf(UserState.EMPTY) }
     val passInfo      = remember { mutableStateOf("") }
     val passState     = remember { mutableStateOf(PasswordState.EMPTY) }
     val passConfState = remember { mutableStateOf(PasswordConfirmationState.EMPTY) }
@@ -71,12 +74,26 @@ fun registryScreen(
 
                 TextField(
                     value         = user,
-                    onValueChange = { user = it },
+                    onValueChange =
+                        {
+                            user = it
+                            isUserSizeValid(
+                                user      = user,
+                                userState = userState
+                            )
+                        },
                     label         = { Text("Usuario") },
                     singleLine    = true
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
+
+                userInformation(
+                    colorPalette = colorPalette,
+                    userState    = userState.value
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
 
                 TextField(
                     value         = id,
@@ -85,14 +102,18 @@ fun registryScreen(
                     singleLine    = true
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp)) // TODO id Size Validation
 
                 TextField(
                     value                = password1,
                     onValueChange        =
                         {
                             password1 = it
-                            isPasswordValid(password1, passState, passInfo)
+                            isPasswordValid(
+                                password         = password1,
+                                passwordState    = passState,
+                                errorDescription = passInfo
+                            )
                         },
                     label                = { Text("Contraseña") },
                     singleLine           = true,
@@ -141,7 +162,11 @@ fun registryScreen(
                     onValueChange        =
                         {
                             password2 = it
-                            isPasswordConfirmed(password1, password2, passConfState)
+                            isPasswordConfirmed(
+                                password1     = password1,
+                                password2     = password2,
+                                passwordState = passConfState
+                            )
                         },
                     label                = { Text("Confirmar contraseña") },
                     singleLine           = true,
@@ -193,10 +218,15 @@ fun registryScreen(
                     ),
                     onClick = {
                         if (
+                            userState.value     == UserState.VALID_SIZE            &&
                             passState.value     == PasswordState.VALID             &&
                             passConfState.value == PasswordConfirmationState.EQUAL
                         ) {
-                            registryOutput(user, id, password1, password2)
+                            registryProcess(
+                                user     = user,
+                                id       = id,
+                                password = password1
+                            )
                         }
                     }
                 ) {
@@ -205,11 +235,4 @@ fun registryScreen(
             }
         }
     }
-}
-
-fun registryOutput(user: String, id: String, password1: String, password2: String) {
-    println(user)
-    println(id)
-    println(password1)
-    println(password2)
 }

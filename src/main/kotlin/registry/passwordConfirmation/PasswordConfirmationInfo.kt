@@ -7,7 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun passwordConfirmationInformation(colorPalette: Colors, passwordConfirmationState: PasswordConfirmationState) {
+fun passwordConfirmationInformation(
+    colorPalette              : Colors,
+    passwordConfirmationState : PasswordConfirmationState
+) {
     Crossfade(targetState = passwordConfirmationState) {
         when (it) {
             PasswordConfirmationState.EMPTY -> {

@@ -19,4 +19,6 @@ fun isPasswordValid(password: String, passwordState: MutableState<PasswordState>
         passwordState.value    = PasswordState.VALID
         errorDescription.value = "No hay error"
     }
+
+    // TODO is not similar to/does not contain the User/id
 }

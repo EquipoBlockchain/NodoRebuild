@@ -26,6 +26,7 @@ class SecretKeyEncrypt {
      * @param input The [ByteArray] to be encrypted.
      * @param secretKey The [SecretKey] used for encryption.
      * @param initVectorBytes The initialization bytes to be used in the encryption.
+     *
      * @see Cipher
      * @see IvParameterSpec
      */

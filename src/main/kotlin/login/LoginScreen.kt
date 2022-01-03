@@ -124,6 +124,8 @@ fun loginScreen(
                     Text(buttonText)
                 }
 
+                Spacer(modifier = Modifier.height(20.dp))
+
                 Button(
                     contentPadding = PaddingValues(
                         start  = 20.dp,

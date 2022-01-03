@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
  *
  * @param colorPalette Colors used for the Material Theme.
  * @param navItemState Mutable value holder for used for navigation between screens.
- *
  */
 @Composable
 fun sideBarReturnToMenu(

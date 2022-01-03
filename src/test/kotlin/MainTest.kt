@@ -8,14 +8,11 @@ import fileAccess.getExampleMessage
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
-import java.security.KeyFactory
-import java.security.spec.PKCS8EncodedKeySpec
-import java.security.spec.X509EncodedKeySpec
 
 fun main() {
-    val path     = "cages/"
+    val path   = "prototypeCages/"
     val folder = File(path)
-    println("cages emptied?: ${folder.deleteRecursively()}")
+    println("prototypeCages emptied?: ${folder.deleteRecursively()}")
 
     print("Input password : ")
     val reader        = BufferedReader(InputStreamReader(System.`in`))
@@ -43,7 +40,7 @@ fun app(password: CharArray, j: Int) {
     val publicKeyEncodedBA  = kPGenInstance.getPublicKeyX509Encoded()
     val privateKeyEncodedBA = kPGenInstance.getPrivateKeyPKCS8Encoded()
 
-    val keyFactoryInstance  = KeyFactory.getInstance("RSA", "BC")
+    //val keyFactoryInstance  = KeyFactory.getInstance("RSA", "BC")
 
     val signResult = signer(
         encodedPrivateKey = privateKeyEncodedBA,
@@ -58,7 +55,6 @@ fun app(password: CharArray, j: Int) {
 
     val user          = "Usuario123456789" //16 bytes
     val userByteArray = user.toByteArray(Charsets.UTF_8)
-    // TODO padding to 16 bytes
 
     val id            = "ABCD1234"
     val idByteArray   = id.toByteArray(Charsets.UTF_8)
@@ -88,7 +84,7 @@ fun app(password: CharArray, j: Int) {
     val cipherPrivateKeyEncodedBA     = sKEncInstance.cipherBytes
     val cipherPrivateKeyEncodedBASize = sKEncInstance.cipherBytesLength
 
-    val path     = "cages/"
+    val path     = "prototypeCages/"
     val fileName = "Pilot$j"
     val format   = "EVA00Prototype"
 
@@ -129,7 +125,7 @@ fun app(password: CharArray, j: Int) {
     )
 
     val decipherPublicKeyX509EncodedBA = sKDecInstance.plainBytes
-    val decipherPublicKeyDecoded       = keyFactoryInstance.generatePublic(X509EncodedKeySpec(decipherPublicKeyX509EncodedBA))
+    //val decipherPublicKeyDecoded       = keyFactoryInstance.generatePublic(X509EncodedKeySpec(decipherPublicKeyX509EncodedBA))
 
     sKDecInstance.decrypt(
         cipherBytes       = cipherPrivateKeyPKCS8EncodedFromEVA,
@@ -139,7 +135,7 @@ fun app(password: CharArray, j: Int) {
     )
 
     val decipherPrivateKeyPKCS8EncodedBA = sKDecInstance.plainBytes
-    val decipherPrivateKeyDecoded        = keyFactoryInstance.generatePrivate(PKCS8EncodedKeySpec(decipherPrivateKeyPKCS8EncodedBA))
+    //val decipherPrivateKeyDecoded        = keyFactoryInstance.generatePrivate(PKCS8EncodedKeySpec(decipherPrivateKeyPKCS8EncodedBA))
 
     println("-------------------------------------START--------------------------------------------------------------")
     println("Verified                             : $isVerified")

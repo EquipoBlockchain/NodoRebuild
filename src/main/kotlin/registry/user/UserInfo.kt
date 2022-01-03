@@ -1,4 +1,4 @@
-package registry.password
+package registry.user
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.material.Colors
@@ -7,28 +7,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun passwordInformation(
-    colorPalette     : Colors,
-    passwordState    : PasswordState,
-    errorDescription : String
-) {
-    Crossfade(targetState = passwordState) {
+fun userInformation(colorPalette: Colors, userState: UserState) {
+    Crossfade(targetState = userState) {
         when (it) {
-            PasswordState.EMPTY -> {
+            UserState.EMPTY -> {
                 Text(
                     text  = "",
                     color = Color.Transparent
                 )
             }
-            PasswordState.VALID -> {
+            UserState.VALID_SIZE -> {
                 Text(
-                    text  = "Contraseña Valida",
-                    color = Color.Green
+                    text  = "",
+                    color = Color.Transparent
                 )
             }
-            PasswordState.INVALID -> {
+            UserState.INVALID_SIZE -> {
                 Text(
-                    text  = "Error: $errorDescription",
+                    text  = "Error: Tamaño invalido.",
                     color = colorPalette.error
                 )
             }
