@@ -15,14 +15,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import navigation.AppNavType
+import registry.identifier.IdentifierState
+import registry.identifier.idInformation
 import registry.password.PasswordState
-import registry.password.isPasswordValid
 import registry.password.passwordInformation
 import registry.passwordConfirmation.PasswordConfirmationState
-import registry.passwordConfirmation.isPasswordConfirmed
 import registry.passwordConfirmation.passwordConfirmationInformation
 import registry.user.UserState
-import registry.user.isUserSizeValid
 import registry.user.userInformation
 
 /**
@@ -52,7 +51,7 @@ fun registryScreen(
     var passVisible2 by remember { mutableStateOf(false) }
 
     val userState     = remember { mutableStateOf(UserState.EMPTY) }
-    val passInfo      = remember { mutableStateOf("") }
+    val idState       = remember { mutableStateOf(IdentifierState.EMPTY) }
     val passState     = remember { mutableStateOf(PasswordState.EMPTY) }
     val passConfState = remember { mutableStateOf(PasswordConfirmationState.EMPTY) }
 
@@ -74,14 +73,19 @@ fun registryScreen(
 
                 TextField(
                     value         = user,
-                    onValueChange =
-                        {
-                            user = it
-                            isUserSizeValid(
-                                user      = user,
-                                userState = userState
-                            )
-                        },
+                    onValueChange = {
+                        user = it
+                        isInfoValid(
+                            user              = user,
+                            id                = id,
+                            password1         = password1,
+                            password2         = password2,
+                            idState           = idState,
+                            userState         = userState,
+                            passwordState     = passState,
+                            passwordConfState = passConfState
+                        )
+                    },
                     label         = { Text("Usuario") },
                     singleLine    = true
                 )
@@ -97,24 +101,47 @@ fun registryScreen(
 
                 TextField(
                     value         = id,
-                    onValueChange = { id = it },
+                    onValueChange = {
+                        id = it
+                        isInfoValid(
+                            user              = user,
+                            id                = id,
+                            password1         = password1,
+                            password2         = password2,
+                            idState           = idState,
+                            userState         = userState,
+                            passwordState     = passState,
+                            passwordConfState = passConfState
+                        )
+                    },
                     label         = { Text("Identificador") },
                     singleLine    = true
                 )
 
-                Spacer(modifier = Modifier.height(20.dp)) // TODO id Size Validation
+                Spacer(modifier = Modifier.height(10.dp))
+
+                idInformation(
+                    colorPalette = colorPalette,
+                    idState      = idState.value
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
 
                 TextField(
                     value                = password1,
-                    onValueChange        =
-                        {
-                            password1 = it
-                            isPasswordValid(
-                                password         = password1,
-                                passwordState    = passState,
-                                errorDescription = passInfo
-                            )
-                        },
+                    onValueChange        = {
+                        password1 = it
+                        isInfoValid(
+                            user              = user,
+                            id                = id,
+                            password1         = password1,
+                            password2         = password2,
+                            idState           = idState,
+                            userState         = userState,
+                            passwordState     = passState,
+                            passwordConfState = passConfState
+                        )
+                    },
                     label                = { Text("Contraseña") },
                     singleLine           = true,
                     visualTransformation =
@@ -142,7 +169,11 @@ fun registryScreen(
                                     passVisible2 = false
                             }
                         ) {
-                            Image(painter = eyeIcon, "Visibility Indicator Password", alpha = 0.50F)
+                            Image(
+                                painter            = eyeIcon,
+                                contentDescription = "Visibility Indicator Password",
+                                alpha              = 0.50F
+                            )
                         }
                     }
                 )
@@ -151,27 +182,30 @@ fun registryScreen(
 
                 passwordInformation(
                     colorPalette     = colorPalette,
-                    passwordState    = passState.value,
-                    errorDescription = passInfo.value
+                    passwordState    = passState.value
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 TextField(
                     value                = password2,
-                    onValueChange        =
-                        {
-                            password2 = it
-                            isPasswordConfirmed(
-                                password1     = password1,
-                                password2     = password2,
-                                passwordState = passConfState
-                            )
-                        },
+                    onValueChange        = {
+                        password2 = it
+                        isInfoValid(
+                            user              = user,
+                            id                = id,
+                            password1         = password1,
+                            password2         = password2,
+                            idState           = idState,
+                            userState         = userState,
+                            passwordState     = passState,
+                            passwordConfState = passConfState
+                        )
+                    },
                     label                = { Text("Confirmar contraseña") },
                     singleLine           = true,
                     visualTransformation =
-                        if (passVisible2){
+                        if (passVisible2) {
                             VisualTransformation.None
                         } else {
                             PasswordVisualTransformation()
@@ -195,7 +229,11 @@ fun registryScreen(
                                     passVisible1 = false
                             }
                         ) {
-                            Image(painter = eyeIcon, "Visibility Indicator Password Confirmation", alpha = 0.50F)
+                            Image(
+                                painter            = eyeIcon,
+                                contentDescription = "Visibility Indicator Password Confirmation",
+                                alpha              = 0.50F
+                            )
                         }
                     }
                 )
@@ -217,8 +255,19 @@ fun registryScreen(
                         bottom = 12.dp
                     ),
                     onClick = {
+                        isInfoValid(
+                            user              = user,
+                            id                = id,
+                            password1         = password1,
+                            password2         = password2,
+                            idState           = idState,
+                            userState         = userState,
+                            passwordState     = passState,
+                            passwordConfState = passConfState
+                        )
                         if (
-                            userState.value     == UserState.VALID_SIZE            &&
+                            userState.value     == UserState.VALID                 &&
+                            idState.value       == IdentifierState.VALID           &&
                             passState.value     == PasswordState.VALID             &&
                             passConfState.value == PasswordConfirmationState.EQUAL
                         ) {

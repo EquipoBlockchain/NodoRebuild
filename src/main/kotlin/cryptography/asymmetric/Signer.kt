@@ -24,6 +24,7 @@ fun signer(
 ): ByteArray {
     // Add Bouncy Castle Provider
     Security.addProvider(BouncyCastleProvider())
+
     // RSA SSA - PSS 256
     val signatureInstance   = Signature.getInstance("SHA256withRSAandMGF1", "BC")
     val keyFactoryInstance  = KeyFactory.getInstance("RSA", "BC")

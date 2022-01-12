@@ -4,9 +4,7 @@ import cryptography.asymmetric.KeyPairGenerator
 import cryptography.asymmetric.signer
 import cryptography.asymmetric.verifier
 import cryptography.symmetric.*
-import fileAccess.FileEVAReader
-import fileAccess.createEVA
-import fileAccess.getExampleMessage
+import fileAccess.*
 
 lateinit var publicKeyX509EncodedByteArray  : ByteArray
 lateinit var privateKeyPKCS8EncodedByteArray : ByteArray
@@ -18,17 +16,16 @@ lateinit var decipherPublicKeyX509EncodedByteArray   : ByteArray
 lateinit var decipherPrivateKeyPKCS8EncodedByteArray : ByteArray
 
 fun isEVAValid(
-    passwordCharArray : CharArray,
-    userByteArray     : ByteArray,
-    idByteArray       : ByteArray
+    path                : String,
+    fileName            : String,
+    format              : String,
+    passwordCharArray   : CharArray,
+    userPaddedByteArray : ByteArray,
+    idByteArray         : ByteArray
     // TODO add mutable state for failure info
 ): Boolean {
-    // TODO subject to change
-    val path     = "cages/"
-    val fileName = userByteArray.toString(Charsets.UTF_8)
-    val format   = "eva"
 
-    val keyPairGeneratorInstance   = KeyPairGenerator()
+    val keyPairGeneratorInstance    = KeyPairGenerator()
     keyPairGeneratorInstance.generate()
     publicKeyX509EncodedByteArray   = keyPairGeneratorInstance.getPublicKeyX509Encoded()
     privateKeyPKCS8EncodedByteArray = keyPairGeneratorInstance.getPrivateKeyPKCS8Encoded()
@@ -64,7 +61,7 @@ fun isEVAValid(
             path            = path,
             fileName        = fileName,
             format          = format,
-            userByteArray   = userByteArray,
+            userByteArray   = userPaddedByteArray,
             idByteArray     = idByteArray,
             salt            = salt,
             initVectorBytes = initVectorBytes
@@ -80,7 +77,7 @@ fun isEVAValid(
             fileName          = fileName,
             format            = format,
             passwordCharArray = passwordCharArray,
-            userByteArray     = userByteArray,
+            userByteArray     = userPaddedByteArray,
             idByteArray       = idByteArray,
             salt              = salt,
             initVectorBytes   = initVectorBytes

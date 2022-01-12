@@ -1,51 +1,58 @@
 package registry
 
+import fileAccess.getFormat
+import fileAccess.getNewFileName
+import fileAccess.getPath
 import registry.process.isEVAValid
 import registry.process.isProcessValid
+import registry.user.addPadding
 
 fun registryProcess(
     user     : String,
     id       : String,
     password : String
 ) {
-    println(user)
-    println(id)
-    println(password)
+    val userByteArray       = user.toByteArray(Charsets.UTF_8)
+    val userPaddedByteArray = addPadding(userByteArray)
+    val idByteArray         = id.toByteArray(Charsets.UTF_8)
+    val passwordCharArray   = password.toCharArray()
 
-    val userByteArray     = user.toByteArray(Charsets.UTF_8)
-
-    /*
-    * TODO user padding
-    * This has to be paralleled by the MAGI or the Entity database
-    *
-    * Options:
-    * Fill with nulls  > Does not affect user size in EVA file
-    * 2-16 byte blocks > Affects user size in EVA file
-    * 3-8  byte blocks > Affects user size in EVA file
-    * */
-
-    val idByteArray       = id.toByteArray(Charsets.UTF_8)
-
-    val passwordCharArray = password.toCharArray()
+    val path     = getPath()
+    val fileName = getNewFileName(user)
+    val format   = getFormat()
 
     if (
         isEVAValid(
-            passwordCharArray = passwordCharArray,
-            userByteArray     = userByteArray,
-            idByteArray       = idByteArray
+            path                = path,
+            fileName            = fileName,
+            format              = format,
+            passwordCharArray   = passwordCharArray,
+            userPaddedByteArray = userPaddedByteArray,
+            idByteArray         = idByteArray
         )
     ) {
         // TODO Popup notification
-        println("EVA is Valid")
+        println("EVA is valid")
+    }
+    else {
+        // TODO Error notification
+        println("EVA is NOT valid")
     }
 
     if (
         isProcessValid(
-            userByteArray = userByteArray,
-            idByteArray   = idByteArray
+            path                = path,
+            fileName            = fileName,
+            format              = format,
+            userPaddedByteArray = userPaddedByteArray,
+            idByteArray         = idByteArray
         )
     ) {
         // TODO Popup notification
-        println("Process is Valid")
+        println("Process is valid")
+    }
+    else {
+        // TODO Error notification
+        println("Process is NOT valid")
     }
 }

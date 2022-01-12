@@ -64,6 +64,7 @@ class FileEVAReader {
             }
         } catch (e: IOException) {
             println("While Reading: $e")
+            //TODO convert to log
         }
     }
 }

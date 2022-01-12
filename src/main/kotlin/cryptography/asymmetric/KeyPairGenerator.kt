@@ -3,7 +3,6 @@ package cryptography.asymmetric
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import java.security.KeyPair
 import java.security.KeyPairGenerator
-import java.security.SecureRandom
 import java.security.Security
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
@@ -46,7 +45,7 @@ class KeyPairGenerator {
 
     /**
      * Generates a new cryptographic key pair using the RSA algorithm within the Bouncy Castle Provider. Initialized
-     * with the SecureRandom (RNG) algorithm and a size of 1024 bits.
+     * with a key size of 1024 bits.
      *
      * @see KeyPairGenerator
      */
@@ -55,7 +54,7 @@ class KeyPairGenerator {
         Security.addProvider(BouncyCastleProvider())
 
         val keyGen = KeyPairGenerator.getInstance("RSA", "BC")
-        keyGen.initialize(1024, SecureRandom())
-        keyPair    = keyGen.generateKeyPair()
+        keyGen.initialize(1024)
+        keyPair = keyGen.generateKeyPair()
     }
 }

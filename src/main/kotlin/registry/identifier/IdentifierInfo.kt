@@ -1,4 +1,4 @@
-package registry.user
+package registry.identifier
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.material.Colors
@@ -7,31 +7,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun userInformation(
+fun idInformation(
     colorPalette : Colors,
-    userState    : UserState
+    idState      : IdentifierState
 ) {
-    Crossfade(targetState = userState) {
+    Crossfade(targetState = idState) {
         when (it) {
-            UserState.EMPTY -> {
+            IdentifierState.EMPTY -> {
                 Text(
                     text  = "",
                     color = Color.Transparent
                 )
             }
-            UserState.VALID -> {
+            IdentifierState.VALID -> {
                 Text(
                     text  = "",
                     color = Color.Transparent
                 )
             }
-            UserState.INVALID_SIZE -> {
+            IdentifierState.INVALID_SIZE -> {
                 Text(
-                    text  = "Error: Tamaño invalido (El usuario debe tener entre 6 y 16 caracteres).",
+                    text  = "Error: Tamaño invalido (El identificador debe poseer 8 caracteres).",
                     color = colorPalette.error
                 )
             }
-            UserState.INVALID_CHAR -> {
+            IdentifierState.INVALID_CHAR -> {
                 Text(
                     text  = "Error: El usuario ingresado contiene un caracter no permitido.",
                     color = colorPalette.error

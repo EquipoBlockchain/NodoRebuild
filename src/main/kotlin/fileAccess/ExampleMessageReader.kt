@@ -15,6 +15,7 @@ fun getExampleMessage(): ByteArray {
         }
     } catch (e: IOException) {
         println("While Reading: $e")
+        //TODO convert to log
     }
     return "No message found".encodeToByteArray()
 }

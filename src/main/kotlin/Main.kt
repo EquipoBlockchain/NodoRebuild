@@ -71,7 +71,6 @@ fun bodyContent(
         when (it) {
             AppNavType.MENU     -> {
                 menuScreen(colorPalette, navItemState)
-                //menuEVAScreen(navItemState)
             }
             AppNavType.CHAIN     -> {
                 sideBarReturnToMenu(colorPalette, navItemState)

@@ -9,8 +9,7 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun passwordInformation(
     colorPalette     : Colors,
-    passwordState    : PasswordState,
-    errorDescription : String
+    passwordState    : PasswordState
 ) {
     Crossfade(targetState = passwordState) {
         when (it) {
@@ -26,9 +25,27 @@ fun passwordInformation(
                     color = Color.Green
                 )
             }
-            PasswordState.INVALID -> {
+            PasswordState.INVALID_SIZE -> {
                 Text(
-                    text  = "Error: $errorDescription",
+                    text  = "Error: La contraseña debe contener almenos 12 caracteres",
+                    color = colorPalette.error
+                )
+            }
+            PasswordState.INVALID_NO_UPPERCASE -> {
+                Text(
+                    text  = "Error: La contraseña debe contener almenos 1 mayúscula",
+                    color = colorPalette.error
+                )
+            }
+            PasswordState.INVALID_NO_LOWERCASE -> {
+                Text(
+                    text  = "Error: La contraseña debe contener almenos 1 minúscula",
+                    color = colorPalette.error
+                )
+            }
+            PasswordState.INVALID_NO_NUMBER -> {
+                Text(
+                    text  = "Error: La contraseña debe contener almenos 1 número",
                     color = colorPalette.error
                 )
             }

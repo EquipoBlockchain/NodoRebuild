@@ -1,6 +1,6 @@
-package registry.user
+package registry.identifier
 
-enum class UserState {
+enum class IdentifierState {
     EMPTY,
     VALID,
     INVALID_SIZE,
