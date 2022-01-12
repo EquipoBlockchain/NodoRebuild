@@ -9,8 +9,9 @@ fun getExampleMessage(): ByteArray {
     try {
         val file = File("Information/message.md")
         if (file.exists()) {
-            val inputStream = FileInputStream(file)
+            val inputStream  = FileInputStream(file)
             messageByteArray = inputStream.readAllBytes()
+            inputStream.close()
             return messageByteArray
         }
     } catch (e: IOException) {

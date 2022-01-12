@@ -61,6 +61,7 @@ class FileEVAReader {
                 initVectorBytes              = fileEVAToByteArray.copyOfRange(index3, index4)
                 cipherPublicKeyX509Encoded   = fileEVAToByteArray.copyOfRange(index4, index5)
                 cipherPrivateKeyPKCS8Encoded = fileEVAToByteArray.copyOfRange(index5, index6)
+                inputStream.close()
             }
         } catch (e: IOException) {
             println("While Reading: $e")

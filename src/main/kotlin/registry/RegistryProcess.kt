@@ -1,5 +1,6 @@
 package registry
 
+import fileAccess.deleteEVAFile
 import fileAccess.getFormat
 import fileAccess.getNewFileName
 import fileAccess.getPath
@@ -41,9 +42,6 @@ fun registryProcess(
 
     if (
         isProcessValid(
-            path                = path,
-            fileName            = fileName,
-            format              = format,
             userPaddedByteArray = userPaddedByteArray,
             idByteArray         = idByteArray
         )
@@ -54,5 +52,10 @@ fun registryProcess(
     else {
         // TODO Error notification
         println("Process is NOT valid")
+        deleteEVAFile(
+            path     = path,
+            fileName = fileName,
+            format   = format
+        )
     }
 }

@@ -38,12 +38,12 @@ fun createEVA(
         val folder = File(path)
         val file   = File("$path$fileName.$format")
 
-        // TODO Make logs
         println("MK Dir: ${folder.mkdir()}")
+        // TODO Make logs
 
         if (file.createNewFile()) {
             val outputStream = FileOutputStream(file)
-            outputStream.run {
+            outputStream.runCatching {
                 write(user)
                 write(id)
                 write(salt)
@@ -51,11 +51,15 @@ fun createEVA(
                 write(cipherPublicKeyX509Encoded)
                 write(cipherPrivateKeyPKCS8Encoded)
                 close()
+            }.onFailure {
+                println("While Creating: $it")
+                // TODO Make logs
             }
             return true
         }
     } catch (e: IOException) {
         println("While Creating: $e")
+        // TODO Make logs
     }
     return false
 }

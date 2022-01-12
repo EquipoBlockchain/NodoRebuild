@@ -1,12 +1,8 @@
 package registry.process
 
-import fileAccess.deleteEVAFile
 import registry.user.addPadding
 
 fun isProcessValid(
-    path                : String,
-    fileName            : String,
-    format              : String,
     userPaddedByteArray : ByteArray,
     idByteArray         : ByteArray
 ): Boolean {
@@ -21,12 +17,6 @@ fun isProcessValid(
     ) {
         return true
     }
-
-    deleteEVAFile(
-        path     = path,
-        fileName = fileName,
-        format   = format
-    )
 
     return false
 }

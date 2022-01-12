@@ -15,5 +15,6 @@ fun deleteEVAFile(
     }
     catch (e: IOException){
         println(e)
+        //TODO convert to log
     }
 }
