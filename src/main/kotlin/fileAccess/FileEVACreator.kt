@@ -51,14 +51,20 @@ fun createEVA(
                 write(cipherPublicKeyX509Encoded)
                 write(cipherPrivateKeyPKCS8Encoded)
                 close()
-            }.onFailure {
-                println("While Creating: $it")
+            }.onSuccess {
+                println("Writing to file successful")
+                // TODO Make logs
+            }.onFailure { throwable ->
+                println("While writing: $throwable")
                 // TODO Make logs
             }
             return true
+        } else {
+            println("File Already exists/could not be created")
         }
-    } catch (e: IOException) {
-        println("While Creating: $e")
+
+    } catch (e: Throwable) {
+        println("While creating: $e")
         // TODO Make logs
     }
     return false

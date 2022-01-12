@@ -34,28 +34,28 @@ fun registryProcess(
     ) {
         // TODO Popup notification
         println("EVA is valid")
+
+        if (
+            isProcessValid(
+                userPaddedByteArray = userPaddedByteArray,
+                idByteArray         = idByteArray
+            )
+        ) {
+            // TODO Popup notification
+            println("Process is valid")
+        }
+        else {
+            // TODO Error notification
+            println("Process is NOT valid")
+            deleteEVAFile(
+                path     = path,
+                fileName = fileName,
+                format   = format
+            )
+        }
     }
     else {
         // TODO Error notification
         println("EVA is NOT valid")
-    }
-
-    if (
-        isProcessValid(
-            userPaddedByteArray = userPaddedByteArray,
-            idByteArray         = idByteArray
-        )
-    ) {
-        // TODO Popup notification
-        println("Process is valid")
-    }
-    else {
-        // TODO Error notification
-        println("Process is NOT valid")
-        deleteEVAFile(
-            path     = path,
-            fileName = fileName,
-            format   = format
-        )
     }
 }
