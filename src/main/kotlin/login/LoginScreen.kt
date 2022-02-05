@@ -32,15 +32,16 @@ import navigation.AppNavType
  */
 @Composable
 fun loginScreen(
-    colorPalette: Colors,
-    navItemState: MutableState<AppNavType>
+    colorPalette : Colors,
+    navItemState : MutableState<AppNavType>
 ) {
-    var id          by remember { mutableStateOf("") }
+    var user        by remember { mutableStateOf("") }
     var password    by remember { mutableStateOf("") }
     var passVisible by remember { mutableStateOf(false) }
 
-    val buttonText    = "Log in"
+    val logButtonText = "Log in"
     val regButtonText = "Registrar"
+
     val eyeOutline    = painterResource("Icons/eye-outline.svg")
     val eyeOffOutline = painterResource("Icons/eye-off-outline.svg")
     val image         = painterResource("Icons/temp-icon.png")
@@ -61,15 +62,23 @@ fun loginScreen(
                     painter            = image,
                     contentDescription = "Profile picture",
                     modifier           = Modifier
-                        .size(90.dp)
-                        .clip(CircleShape)
-                        .border(3.dp, color = MaterialTheme.colors.secondary, CircleShape)
+                        .size(
+                            size = 90.dp
+                        )
+                        .clip(
+                            shape = CircleShape
+                        )
+                        .border(
+                            width = 3.dp,
+                            color = MaterialTheme.colors.secondary,
+                            shape = CircleShape
+                        )
                 )
 
                 OutlinedTextField(
-                    value         = id,
-                    onValueChange = { id = it },
-                    label         = { Text("Identificador") },
+                    value         = user,
+                    onValueChange = { user = it },
+                    label         = { Text("Usuario") },
                     singleLine    = true
                 )
 
@@ -83,7 +92,8 @@ fun loginScreen(
                     visualTransformation =
                     if (passVisible){
                         VisualTransformation.None
-                    } else {
+                    }
+                    else {
                         PasswordVisualTransformation()
                     },
                     keyboardOptions      = KeyboardOptions(
@@ -95,7 +105,8 @@ fun loginScreen(
                         val eyeIcon: Painter =
                             if (passVisible) {
                                 eyeOutline
-                            } else {
+                            }
+                            else {
                                 eyeOffOutline
                             }
                         IconButton(
@@ -118,10 +129,14 @@ fun loginScreen(
                         bottom = 12.dp
                     ),
                     onClick = {
-                        loginOutput(id, password)
+                        loginProcess(
+                            user         = user,
+                            password     = password,
+                            navItemState = navItemState
+                        )
                     }
                 ) {
-                    Text(buttonText)
+                    Text(logButtonText)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -142,9 +157,4 @@ fun loginScreen(
             }
         }
     }
-}
-
-fun loginOutput(id: String, password: String) {
-    println(id)
-    println(password)
 }

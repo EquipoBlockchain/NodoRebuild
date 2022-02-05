@@ -2,38 +2,55 @@ package registry
 
 import fileAccess.deleteEVAFile
 import fileAccess.getFormat
-import fileAccess.getNewFileName
+import fileAccess.toEVAFileName
 import fileAccess.getPath
-import registry.process.isEVAValid
-import registry.process.isProcessValid
-import registry.user.addPadding
+import mu.KotlinLogging
+import registry.validations.isEVAValid
+import registry.validations.isProcessValid
+import fileAccess.addPadding
+import java.io.File
 
+private val logger = KotlinLogging.logger {}
+
+/**
+ * Starts the EVA file validation and the MAGI process validation.
+ *
+ * KotlinLogging Implemented.
+ *
+ * @param user User to be processed.
+ * @param id  Identifier to be processed.
+ * @param password Password to be processed.
+ */
 fun registryProcess(
     user     : String,
     id       : String,
     password : String
 ) {
     val userByteArray       = user.toByteArray(Charsets.UTF_8)
-    val userPaddedByteArray = addPadding(userByteArray)
-    val idByteArray         = id.toByteArray(Charsets.UTF_8)
-    val passwordCharArray   = password.toCharArray()
+    val userPaddedByteArray = addPadding(
+        byteArray = userByteArray,
+        size      = 16
+    )
+    val idByteArray       = id.toByteArray(Charsets.UTF_8)
+    val passwordCharArray = password.toCharArray()
 
     val path     = getPath()
-    val fileName = getNewFileName(user)
+    val fileName = user.toEVAFileName()
     val format   = getFormat()
+
+    val file = File("$path$fileName.$format")
 
     if (
         isEVAValid(
-            path                = path,
-            fileName            = fileName,
-            format              = format,
-            passwordCharArray   = passwordCharArray,
-            userPaddedByteArray = userPaddedByteArray,
-            idByteArray         = idByteArray
+            file       = file,
+            password   = passwordCharArray,
+            userPadded = userPaddedByteArray,
+            id         = idByteArray
         )
     ) {
         // TODO Popup notification
-        println("EVA is valid")
+
+        logger.info { "EVA file is usable." }
 
         if (
             isProcessValid(
@@ -42,20 +59,22 @@ fun registryProcess(
             )
         ) {
             // TODO Popup notification
-            println("Process is valid")
+
+            logger.info { "Process was validated successfully." }
         }
         else {
             // TODO Error notification
-            println("Process is NOT valid")
+
+            logger.warn { "Process was not validated." }
+            logger.warn { "${file.name} will be deleted." }
             deleteEVAFile(
-                path     = path,
-                fileName = fileName,
-                format   = format
+                file = file
             )
         }
     }
     else {
         // TODO Error notification
-        println("EVA is NOT valid")
+
+        logger.error { "EVA file is not usable." }
     }
 }

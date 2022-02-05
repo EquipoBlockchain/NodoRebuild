@@ -1,4 +1,4 @@
-package registry
+package registry.validations
 
 import androidx.compose.runtime.MutableState
 import registry.identifier.IdentifierState

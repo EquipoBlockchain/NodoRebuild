@@ -1,6 +1,6 @@
-package registry.process
+package registry.validations
 
-import registry.user.addPadding
+import fileAccess.addPadding
 
 fun isProcessValid(
     userPaddedByteArray : ByteArray,
@@ -12,7 +12,7 @@ fun isProcessValid(
 
     if (
         // TODO Use response from MAGI
-        userPaddedByteArray.contentEquals(addPadding("JulioRegalado".toByteArray(Charsets.UTF_8))) &&
+        userPaddedByteArray.contentEquals(addPadding("JulioRegalado".toByteArray(Charsets.UTF_8), 16)) &&
         idByteArray.contentEquals("12345678".toByteArray(Charsets.UTF_8))
     ) {
         return true

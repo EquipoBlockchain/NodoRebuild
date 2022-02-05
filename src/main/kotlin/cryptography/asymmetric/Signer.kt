@@ -5,12 +5,12 @@ import java.security.*
 import java.security.spec.PKCS8EncodedKeySpec
 
 /**
- * Uses the provided [encodedPrivateKey] byte array, corresponding to the PKCS #8 encoded private key,
+ * Uses the provided [privateKeyPKCS8Encoded] byte array, corresponding to the PKCS #8 encoded private key,
  * to sign the provided [message].
  *
  * The signature algorithm used is SHA-256 with RSA and MGF1 within the Bouncy Castle Provider.
  *
- * @param encodedPrivateKey Used by the [KeyFactory] to recover the [PrivateKey].
+ * @param privateKeyPKCS8Encoded Used by the [KeyFactory] to recover the [PrivateKey].
  * @param message Message to be signed.
  * @return [ByteArray] corresponding to the signature.
  * @see PrivateKey
@@ -19,8 +19,8 @@ import java.security.spec.PKCS8EncodedKeySpec
  * @see PKCS8EncodedKeySpec
  */
 fun signer(
-    encodedPrivateKey : ByteArray,
-    message           : ByteArray
+    privateKeyPKCS8Encoded : ByteArray,
+    message                : ByteArray
 ): ByteArray {
     // Add Bouncy Castle Provider
     Security.addProvider(BouncyCastleProvider())
@@ -28,7 +28,7 @@ fun signer(
     // RSA SSA - PSS 256
     val signatureInstance   = Signature.getInstance("SHA256withRSAandMGF1", "BC")
     val keyFactoryInstance  = KeyFactory.getInstance("RSA", "BC")
-    val privateKeyPKCS8Spec = PKCS8EncodedKeySpec(encodedPrivateKey)
+    val privateKeyPKCS8Spec = PKCS8EncodedKeySpec(privateKeyPKCS8Encoded)
     val recoveredPrivateKey = keyFactoryInstance.generatePrivate(privateKeyPKCS8Spec)
 
     signatureInstance.initSign(recoveredPrivateKey, SecureRandom())

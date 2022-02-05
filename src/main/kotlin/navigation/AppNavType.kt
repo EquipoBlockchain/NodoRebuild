@@ -5,5 +5,8 @@ enum class AppNavType {
     CHAIN,
     LIVE,
     REGISTRY,
-    LOGIN
+    LOGIN,
+    LOGIN_OPTIONS,
+    LOGIN_VERIFICATIONS,
+    LOGIN_VOTING
 }

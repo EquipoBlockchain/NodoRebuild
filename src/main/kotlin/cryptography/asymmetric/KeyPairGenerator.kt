@@ -26,21 +26,23 @@ class KeyPairGenerator {
     /**
      * Returns the public key encoded according to the X.509 standard as a byte array.
      *
+     * @return [ByteArray]
      * @see X509EncodedKeySpec
      */
     fun getPublicKeyX509Encoded(): ByteArray {
-        val encodedPublicKeyX509  = X509EncodedKeySpec(keyPair.public.encoded)
-        return encodedPublicKeyX509.encoded
+        val publicKeyX509 = X509EncodedKeySpec(keyPair.public.encoded)
+        return publicKeyX509.encoded
     }
 
     /**
      * Returns the private key encoded according to the PKCS #8 standard as a byte array.
      *
+     * @return [ByteArray]
      * @see PKCS8EncodedKeySpec
      */
     fun getPrivateKeyPKCS8Encoded(): ByteArray {
-        val encodedPrivateKeyPKCS8 = PKCS8EncodedKeySpec(keyPair.private.encoded)
-        return encodedPrivateKeyPKCS8.encoded
+        val privateKeyPKCS8 = PKCS8EncodedKeySpec(keyPair.private.encoded)
+        return privateKeyPKCS8.encoded
     }
 
     /**

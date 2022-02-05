@@ -23,6 +23,7 @@ import registry.passwordConfirmation.PasswordConfirmationState
 import registry.passwordConfirmation.passwordConfirmationInformation
 import registry.user.UserState
 import registry.user.userInformation
+import registry.validations.isInfoValid
 
 /**
  * Displays registry screen and captures the user's input.
@@ -147,7 +148,8 @@ fun registryScreen(
                     visualTransformation =
                         if (passVisible1){
                             VisualTransformation.None
-                        } else {
+                        }
+                        else {
                             PasswordVisualTransformation()
                         },
                     keyboardOptions      = KeyboardOptions(
@@ -159,7 +161,8 @@ fun registryScreen(
                         val eyeIcon: Painter =
                             if (passVisible1) {
                                 eyeOutline
-                            } else {
+                            }
+                            else {
                                 eyeOffOutline
                             }
                         IconButton(
@@ -207,7 +210,8 @@ fun registryScreen(
                     visualTransformation =
                         if (passVisible2) {
                             VisualTransformation.None
-                        } else {
+                        }
+                        else {
                             PasswordVisualTransformation()
                         },
                     keyboardOptions      = KeyboardOptions(
@@ -219,7 +223,8 @@ fun registryScreen(
                         val eyeIcon: Painter =
                             if (passVisible2) {
                                 eyeOutline
-                            } else {
+                            }
+                            else {
                                 eyeOffOutline
                             }
                         IconButton(

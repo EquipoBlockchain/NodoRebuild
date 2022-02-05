@@ -1,7 +1,5 @@
-import androidx.compose.animation.Crossfade
 import androidx.compose.material.Colors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -9,11 +7,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import login.loginScreen
-import mainMenu.menuScreen
 import navigation.AppNavType
-import navigation.sideBarReturnToMenu
-import registry.registryScreen
+import navigation.bodyContent
 
 fun main() = application {
     val icon = painterResource("Icons/temp-icon.png")
@@ -61,34 +56,6 @@ fun app(colorPalette: Colors) {
     bodyContent(colorPalette, navItemState , navItemState.value)
 }
 
-@Composable
-fun bodyContent(
-    colorPalette: Colors,
-    navItemState: MutableState<AppNavType>,
-    appNavType:   AppNavType
-) {
-    Crossfade(targetState = appNavType) {
-        when (it) {
-            AppNavType.MENU     -> {
-                menuScreen(colorPalette, navItemState)
-            }
-            AppNavType.CHAIN     -> {
-                sideBarReturnToMenu(colorPalette, navItemState)
-            }
-            AppNavType.LIVE     -> {
-                sideBarReturnToMenu(colorPalette, navItemState)
-            }
-            AppNavType.LOGIN    -> {
-                sideBarReturnToMenu(colorPalette, navItemState)
-                loginScreen(colorPalette, navItemState)
-            }
-            AppNavType.REGISTRY -> {
-                sideBarReturnToMenu(colorPalette, navItemState)
-                registryScreen(colorPalette, navItemState)
-            }
-        }
-    }
-}
 
 
 

@@ -1,20 +1,32 @@
 package fileAccess
 
+import mu.KotlinLogging
 import java.io.File
-import java.io.IOException
 
+private val logger = KotlinLogging.logger {}
+
+/**
+ * Deletes the file specified.
+ *
+ * KotlinLogging Implemented.
+ *
+ * @param file File to be deleted.
+ */
 fun deleteEVAFile(
-    path     : String,
-    fileName : String,
-    format   : String
+    file : File
 ) {
-    val file = File("$path$fileName.$format")
     try {
-        println("Was file deleted? : ${file.delete()}")
-        //TODO convert to log
+        if (file.delete()) {
+            logger.info { "${file.name} deleted successfully" }
+        }
+        else if (file.exists()) {
+            logger.error { "${file.name} could not be deleted, and still exists." }
+        }
+        else {
+            logger.warn { "${file.name} does not exist." }
+        }
     }
-    catch (e: IOException){
-        println(e)
-        //TODO convert to log
+    catch (throwable: Throwable) {
+        logger.error { throwable }
     }
 }

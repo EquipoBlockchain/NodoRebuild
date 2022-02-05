@@ -36,8 +36,8 @@ class SecretKeyGenerator {
      * @see PBEKeySpec
      */
     fun generate(
-        password: CharArray,
-        salt:     ByteArray
+        password : CharArray,
+        salt     : ByteArray
     ) {
         // Add Bouncy Castle Provider
         Security.addProvider(BouncyCastleProvider())

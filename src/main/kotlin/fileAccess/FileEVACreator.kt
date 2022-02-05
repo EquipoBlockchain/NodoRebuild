@@ -1,17 +1,18 @@
 package fileAccess
 
+import mu.KotlinLogging
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Creates and writes to an EVA file all the inputs introduced.
  *
- * @param path Directory in the system, where the EVA file is stored (Expected to end with / character).
- * If the directory introduced does not exist, it is created.
- * @param fileName Name of the EVA file to be read.
- * @param format Designated extension of the EVA file.
- * @param user Byte array to be written (Size: 16 bytes).
+ * KotlinLogging Implemented.
+ *
+ * @param file File to be read. If the directory included does not exist, it is created.
+ * @param userPadded Byte array to be written (Size: 16 bytes).
  * @param id Byte array to be written (Size: 8 bytes).
  * @param salt Byte array to be written (Size: 16 bytes).
  * @param initVectorBytes Byte array to be written (Size: 16 bytes).
@@ -24,10 +25,8 @@ import java.io.IOException
  * @see FileOutputStream
  */
 fun createEVA(
-    path                         : String,
-    fileName                     : String,
-    format                       : String,
-    user                         : ByteArray,
+    file                         : File,
+    userPadded                   : ByteArray,
     id                           : ByteArray,
     salt                         : ByteArray,
     initVectorBytes              : ByteArray,
@@ -35,16 +34,20 @@ fun createEVA(
     cipherPrivateKeyPKCS8Encoded : ByteArray
 ): Boolean {
     try {
-        val folder = File(path)
-        val file   = File("$path$fileName.$format")
+        val directory = File(file.parentFile.toURI())
 
-        println("MK Dir: ${folder.mkdir()}")
-        // TODO Make logs
+        if (directory.mkdir()) {
+            logger.info { "Directory: /${directory.name} was created" }
+        } else if (directory.exists()) {
+            logger.info { "Directory: /${directory.name} already exists" }
+        } else {
+            logger.warn { "Directory: /${directory.name} failed to be created" }
+        }
 
         if (file.createNewFile()) {
             val outputStream = FileOutputStream(file)
             outputStream.runCatching {
-                write(user)
+                write(userPadded)
                 write(id)
                 write(salt)
                 write(initVectorBytes)
@@ -52,20 +55,20 @@ fun createEVA(
                 write(cipherPrivateKeyPKCS8Encoded)
                 close()
             }.onSuccess {
-                println("Writing to file successful")
-                // TODO Make logs
+                logger.info { "Writing to ${file.name} successful" }
             }.onFailure { throwable ->
-                println("While writing: $throwable")
-                // TODO Make logs
+                logger.error { "Writing to ${file.name} failed" }
+                logger.error { throwable }
             }
             return true
+        } else if (file.exists()) {
+            logger.warn { "File: ${file.name} already exists" }
         } else {
-            println("File Already exists/could not be created")
+            logger.error { "File: ${file.name} could not be created" }
         }
-
-    } catch (e: Throwable) {
-        println("While creating: $e")
-        // TODO Make logs
+    }
+    catch (throwable: Throwable) {
+        logger.error { throwable }
     }
     return false
 }

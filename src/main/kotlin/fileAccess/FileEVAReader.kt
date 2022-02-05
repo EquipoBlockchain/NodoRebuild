@@ -1,14 +1,14 @@
 package fileAccess
 
+import mu.KotlinLogging
 import java.io.File
 import java.io.FileInputStream
-import java.io.IOException
 
 /**
  * This class allocates within named [ByteArray] variables the parts composing an EVA file.
  *
  * Variable names:
- * - [user]                         Length:  16 bytes
+ * - [userPadded]                         Length:  16 bytes
  * - [id]                           Length:   8 bytes
  * - [salt]                         Length:  16 bytes
  * - [initVectorBytes]              Length:  16 bytes
@@ -18,9 +18,11 @@ import java.io.IOException
  * @see FileInputStream
  */
 class FileEVAReader {
+    private val logger = KotlinLogging.logger {}
+
     private lateinit var fileEVAToByteArray   : ByteArray
 
-    lateinit var user                         : ByteArray
+    lateinit var userPadded                   : ByteArray
     lateinit var id                           : ByteArray
     lateinit var salt                         : ByteArray
     lateinit var initVectorBytes              : ByteArray
@@ -38,34 +40,34 @@ class FileEVAReader {
     /**
      * Reads an EVA file and assigns each value to according to the expected index ranges.
      *
-     * @param path Directory in the system, where the EVA file is stored (Expected to end with / character).
-     * @param fileName Name of the EVA file to be read.
-     * @param format Designated extension of the EVA file.
+     * KotlinLogging Implemented.
+     *
+     * @param file File to be read.
      *
      * @see FileInputStream
      */
     fun readEVA(
-        path     : String,
-        fileName : String,
-        format   : String
+        file : File,
     ) {
         try {
-            val file = File("$path/$fileName.$format")
-
             if (file.exists()) {
                 val inputStream              = FileInputStream(file)
                 fileEVAToByteArray           = inputStream.readAllBytes()
-                user                         = fileEVAToByteArray.copyOfRange(index0, index1)
+                userPadded                   = fileEVAToByteArray.copyOfRange(index0, index1)
                 id                           = fileEVAToByteArray.copyOfRange(index1, index2)
                 salt                         = fileEVAToByteArray.copyOfRange(index2, index3)
                 initVectorBytes              = fileEVAToByteArray.copyOfRange(index3, index4)
                 cipherPublicKeyX509Encoded   = fileEVAToByteArray.copyOfRange(index4, index5)
                 cipherPrivateKeyPKCS8Encoded = fileEVAToByteArray.copyOfRange(index5, index6)
                 inputStream.close()
+                logger.info { "${file.name} read successfully" }
             }
-        } catch (e: IOException) {
-            println("While Reading: $e")
-            //TODO convert to log
+            else {
+                logger.error { "${file.name} does not exist" }
+            }
+        }
+        catch (throwable: Throwable) {
+            logger.error { throwable }
         }
     }
 }

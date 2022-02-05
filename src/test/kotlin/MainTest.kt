@@ -43,12 +43,12 @@ fun app(password: CharArray, j: Int) {
     //val keyFactoryInstance  = KeyFactory.getInstance("RSA", "BC")
 
     val signResult = signer(
-        encodedPrivateKey = privateKeyEncodedBA,
+        privateKeyPKCS8Encoded = privateKeyEncodedBA,
         message           = message
     )
 
     val isVerified = verifier(
-        encodedPublicKey = publicKeyEncodedBA,
+        publicKeyX509Encoded = publicKeyEncodedBA,
         message          = message,
         signature        = signResult
     )
@@ -88,11 +88,11 @@ fun app(password: CharArray, j: Int) {
     val fileName = "Pilot$j"
     val format   = "EVA00Prototype"
 
+    val file = File("$path$fileName.$format")
+
     val wasCreated = createEVA(
-        path                         = path,
-        fileName                     = fileName,
-        format                       = format,
-        user                         = userByteArray,
+        file                         = file,
+        userPadded                         = userByteArray,
         id                           = idByteArray,
         salt                         = salt,
         initVectorBytes              = initVectorBytes,
@@ -103,12 +103,10 @@ fun app(password: CharArray, j: Int) {
     println("wasCreated? : $wasCreated")
 
     fEVARInstance.readEVA(
-        path     = path,
-        fileName = fileName,
-        format   = format
+        file = file,
     )
 
-    val userFromEVA                         = fEVARInstance.user
+    val userFromEVA                         = fEVARInstance.userPadded
     val idFromEVA                           = fEVARInstance.id
     val saltFromEVA                         = fEVARInstance.salt
     val initVectorBytesFromEVA              = fEVARInstance.initVectorBytes
