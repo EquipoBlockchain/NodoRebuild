@@ -1,9 +1,12 @@
 package login
 
 import androidx.compose.runtime.MutableState
-import fileAccess.*
+import fileAccess.addPadding
+import fileAccess.fileTypeEVA.FileEVAKeyPairSync
+import fileAccess.fileTypeEVA.getEVAFormat
+import fileAccess.fileTypeEVA.getEVAPath
+import fileAccess.fileTypeEVA.toEVAFileName
 import login.verifications.verificationProcess
-import login.voting.votingProcess
 import mu.KotlinLogging
 import navigation.AppNavType
 import java.io.File
@@ -19,7 +22,7 @@ private lateinit var privateKeyPKCS8Encoded : ByteArray
  *
  * TODO Splash Loading Screen
  *
- * TODO KotlinLogging Implemented.
+ * KotlinLogging Implemented.
  *
  * @param user User to be processed.
  * @param password Password to be processed.
@@ -34,13 +37,14 @@ fun loginProcess(
         byteArray = userByteArray,
         size      = 16
     )
+
     val passwordCharArray   = password.toCharArray()
 
-    val path     = getPath()
+    val path     = getEVAPath()
     val fileName = user.toEVAFileName()
-    val format   = getFormat()
+    val format   = getEVAFormat()
 
-    val file = File("$path$fileName.$format")
+    val file = File("$path$fileName$format")
 
     if (file.exists()) {
         val fileEVAKeyPairSyncInstance = FileEVAKeyPairSync()
@@ -58,13 +62,11 @@ fun loginProcess(
             logger.info { "Key pair information retrieved. Synchronization rate at 100%" }
             logger.info { "Pilot ready to vote. Log in options will be displayed." }
             navItemState.value = AppNavType.LOGIN_OPTIONS
-        }
-        else {
+        } else {
             logger.warn { "Not able to log with the credentials given." }
         }
 
-    }
-    else {
+    } else {
         logger.warn { "No matching user information found." }
     }
 }
@@ -72,11 +74,6 @@ fun loginProcess(
 fun verificationSession() {
     logger.info { "Verification process started." }
     verificationProcess()
-}
-
-fun votingSession() {
-    logger.info { "Voting process started." }
-    votingProcess()
 }
 
 fun closeSession() {

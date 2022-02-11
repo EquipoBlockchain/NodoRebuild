@@ -1,13 +1,13 @@
-package fileAccess
+package fileAccess.fileTypeEVA
 
 // TODO subject to change
 
 /**
- * Directory in the system, where the EVA file is stored (Expected to end with / character).
+ * Directory in the system, where the EVA files are stored (Expected to end with / character).
  *
  * @return [String]
  * */
-fun getPath(): String {
+fun getEVAPath(): String {
     return "cages/"
 }
 
@@ -25,6 +25,6 @@ fun String.toEVAFileName(): String {
  *
  * @return [String]
  * */
-fun getFormat(): String {
-    return "eva"
+fun getEVAFormat(): String {
+    return ".eva"
 }

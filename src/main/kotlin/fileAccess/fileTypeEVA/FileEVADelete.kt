@@ -1,4 +1,4 @@
-package fileAccess
+package fileAccess.fileTypeEVA
 
 import mu.KotlinLogging
 import java.io.File
@@ -18,11 +18,9 @@ fun deleteEVAFile(
     try {
         if (file.delete()) {
             logger.info { "${file.name} deleted successfully" }
-        }
-        else if (file.exists()) {
+        } else if (file.exists()) {
             logger.error { "${file.name} could not be deleted, and still exists." }
-        }
-        else {
+        } else {
             logger.warn { "${file.name} does not exist." }
         }
     }

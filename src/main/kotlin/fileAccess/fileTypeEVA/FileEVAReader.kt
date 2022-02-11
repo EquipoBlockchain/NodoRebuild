@@ -1,8 +1,10 @@
-package fileAccess
+package fileAccess.fileTypeEVA
 
 import mu.KotlinLogging
 import java.io.File
 import java.io.FileInputStream
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * This class allocates within named [ByteArray] variables the parts composing an EVA file.
@@ -18,8 +20,6 @@ import java.io.FileInputStream
  * @see FileInputStream
  */
 class FileEVAReader {
-    private val logger = KotlinLogging.logger {}
-
     private lateinit var fileEVAToByteArray   : ByteArray
 
     lateinit var userPadded                   : ByteArray
@@ -61,8 +61,7 @@ class FileEVAReader {
                 cipherPrivateKeyPKCS8Encoded = fileEVAToByteArray.copyOfRange(index5, index6)
                 inputStream.close()
                 logger.info { "${file.name} read successfully" }
-            }
-            else {
+            } else {
                 logger.error { "${file.name} does not exist" }
             }
         }

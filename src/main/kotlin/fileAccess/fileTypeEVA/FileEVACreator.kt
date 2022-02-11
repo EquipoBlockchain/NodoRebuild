@@ -1,4 +1,4 @@
-package fileAccess
+package fileAccess.fileTypeEVA
 
 import mu.KotlinLogging
 import java.io.File

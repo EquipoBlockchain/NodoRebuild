@@ -1,0 +1,21 @@
+{
+  "lastUpdate"   : "2022-02-05T00:36:43.168290100",
+  "nodeMAGIInfo" :
+  [
+    {
+      "identifier"                 : 10001,
+      "address"                    : "127.0.0.1:5001",
+      "publicKeyX509EncodedBase64" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCn6jXRYOGKQZytKp9shFdFGDm5nKhprtqRfyplwH0Y/KYSlUyaaf2ilQimCa9+FLNSanAyFijGULpK1UD44FEi7xdxhO7mHOwClv0IlAup6c0W9Z31fl/MSqx6gksNcNplIgh9QJCNm+FU4nMeB1sFB6Wtxj9sGAS7CVN72f+uoQIDAQAB"
+    },
+    {
+      "identifier"                 : 10002,
+      "address"                    : "127.0.0.1:5002",
+      "publicKeyX509EncodedBase64" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTIXW31L+z+CNcpHuLqPA01QjCTaix7nHF0mHIbsbwKCdrK+YUs/e1N2RMDEvPOw7457ap3AxzAnxrK+Dd3iQimGkOz8Sk84ieYgWCup4P01j8QFfnI17R6EpPJs09YGeArGNAi+t+9NQ/YGMMHhe8iKxqFjejyeIybRP02GqKGQIDAQAB"
+    },
+    {
+      "identifier"                 : 10003,
+      "address"                    : "127.0.0.1:5003",
+      "publicKeyX509EncodedBase64" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDR9ynF2UnBOxCPS5+teIKdrhyLGD28fmF6HnOUyBTCisXeu4eDRlvVceNw7usUuu3OfA/+ZVSAxn4Y6emf6MtTpQNcVfWA4wJ5jXCajVFyNEOVHKdn67o8TgIr5WrrvSB7X2QcoAph0/YMDeZbWEu1lWkKtkeztcbuQqh9irhRCQIDAQAB"
+    }
+  ]
+}

@@ -28,9 +28,9 @@ fun menuScreen(
     colorPalette : Colors,
     navItemState : MutableState<AppNavType>
 ) {
-    val chainResultsB  by remember { mutableStateOf("Resultados de votaciones anteriores") }
-    val votingProcessB by remember { mutableStateOf("Ver estado actual de proceso de votación") }
-    val loginToVoteB   by remember { mutableStateOf("Log in") }
+    val chainResultsB  = "Resultados de votaciones anteriores"
+    val votingProcessB = "Ver estado actual de proceso de votación"
+    val loginToVoteB   = "Log in"
 
     MaterialTheme(
         colors = colorPalette

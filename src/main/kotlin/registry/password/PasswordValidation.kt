@@ -8,17 +8,13 @@ fun isPasswordValid(
 ) {
     if (password.length < 12) {
         passwordState.value = PasswordState.INVALID_SIZE
-    }
-    else if (!password.contains("[A-Z]".toRegex())) {
+    } else if (!password.contains("[A-Z]".toRegex())) {
         passwordState.value = PasswordState.INVALID_NO_UPPERCASE
-    }
-    else if (!password.contains("[a-z]".toRegex())) {
+    } else if (!password.contains("[a-z]".toRegex())) {
         passwordState.value = PasswordState.INVALID_NO_LOWERCASE
-    }
-    else if (!password.contains("[0-9]".toRegex())) {
+    } else if (!password.contains("[0-9]".toRegex())) {
         passwordState.value = PasswordState.INVALID_NO_NUMBER
-    }
-    else {
+    } else {
         passwordState.value = PasswordState.VALID
     }
     // TODO Viability of https://github.com/nulab/zxcvbn4j integration

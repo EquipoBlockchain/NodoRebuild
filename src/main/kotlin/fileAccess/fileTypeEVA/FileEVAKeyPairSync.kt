@@ -1,4 +1,4 @@
-package fileAccess
+package fileAccess.fileTypeEVA
 
 import cryptography.symmetric.SecretKeyDecrypt
 import cryptography.symmetric.SecretKeyGenerator
@@ -7,12 +7,19 @@ import java.io.File
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 
+private val logger = KotlinLogging.logger {}
+
 /**
- * TODO Document
+ * This class allows allocating three [ByteArray] objects initialized outside the constructor, requiring to call
+ * [synchronizeEVAKeyPair] first.
+ *
+ * - [idFromEVA] is the ID obtained from the file.
+ * - [publicKeyX509Encoded] is the Public Key encoded according to the X.509 standard, obtained by decrypting the file.
+ * - [privateKeyPKCS8Encoded] is the Private Key encoded according to the PKCS #8 standard, obtained by decrypting the
+ * file.
+ *
  */
 class FileEVAKeyPairSync {
-    private val logger = KotlinLogging.logger {}
-
     private lateinit var idFromEVA              : ByteArray
     private lateinit var publicKeyX509Encoded   : ByteArray
     private lateinit var privateKeyPKCS8Encoded : ByteArray
@@ -47,9 +54,14 @@ class FileEVAKeyPairSync {
     }
 
     /**
-     * TODO Document
+     * Calls the necessary functions for decrypting a file, obtaining the respective public key and private key.
      *
      * KotlinLogging Implemented.
+     *
+     * @param file File to be decrypted.
+     * @param password Password to be used during decryption.
+     * @param userPadded Username to be compared with header information.
+     * @return [Boolean] Returns true if the keys where retrieved correctly. Returns false otherwise.
      */
     fun synchronizeEVAKeyPair(
         file       : File,
@@ -100,8 +112,7 @@ class FileEVAKeyPairSync {
 
                 privateKeyPKCS8Encoded = secretKeyDecryptInstance.plainBytes
 
-            }
-            catch (throwable: Throwable) {
+            } catch (throwable: Throwable) {
                 logger.warn { "Wrong password input or fatal error has occurred." }
                 logger.error { "Key pair information error. Synchronization stopped at 10%" }
                 logger.error { throwable }
@@ -109,8 +120,7 @@ class FileEVAKeyPairSync {
             }
             logger.info { "Key pair information obtained. Synchronization rate at 41.3%" }
             return true
-        }
-        else {
+        } else {
             logger.warn { "Internal user information does not match. Synchronization stopped at 0%" }
         }
         return false

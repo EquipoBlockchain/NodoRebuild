@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import login.loginScreen
 import login.options.loginOptionsScreen
+import login.voting.votingScreen
 import mainMenu.menuScreen
 import registry.registryScreen
 
@@ -79,7 +80,9 @@ fun bodyContent(
                     colorPalette = colorPalette,
                     navItemState = navItemState
                 )
-                //TODO
+                votingScreen(
+                    colorPalette = colorPalette
+                )
             }
         }
     }

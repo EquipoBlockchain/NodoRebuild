@@ -25,8 +25,7 @@ fun getExampleMessage(): ByteArray {
             inputStream.close()
             logger.info { "${file.name} retrieved" }
             return messageByteArray
-        }
-        else {
+        } else {
             logger.error { "${file.name} does not exist" }
         }
     }

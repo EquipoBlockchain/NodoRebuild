@@ -1,9 +1,9 @@
 package registry
 
-import fileAccess.deleteEVAFile
-import fileAccess.getFormat
-import fileAccess.toEVAFileName
-import fileAccess.getPath
+import fileAccess.fileTypeEVA.deleteEVAFile
+import fileAccess.fileTypeEVA.getEVAFormat
+import fileAccess.fileTypeEVA.toEVAFileName
+import fileAccess.fileTypeEVA.getEVAPath
 import mu.KotlinLogging
 import registry.validations.isEVAValid
 import registry.validations.isProcessValid
@@ -34,11 +34,11 @@ fun registryProcess(
     val idByteArray       = id.toByteArray(Charsets.UTF_8)
     val passwordCharArray = password.toCharArray()
 
-    val path     = getPath()
+    val path     = getEVAPath()
     val fileName = user.toEVAFileName()
-    val format   = getFormat()
+    val format   = getEVAFormat()
 
-    val file = File("$path$fileName.$format")
+    val file = File("$path$fileName$format")
 
     if (
         isEVAValid(
@@ -61,8 +61,7 @@ fun registryProcess(
             // TODO Popup notification
 
             logger.info { "Process was validated successfully." }
-        }
-        else {
+        } else {
             // TODO Error notification
 
             logger.warn { "Process was not validated." }
@@ -71,8 +70,7 @@ fun registryProcess(
                 file = file
             )
         }
-    }
-    else {
+    } else {
         // TODO Error notification
 
         logger.error { "EVA file is not usable." }

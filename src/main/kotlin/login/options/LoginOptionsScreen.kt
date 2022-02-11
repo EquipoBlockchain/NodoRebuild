@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import login.verificationSession
-import login.votingSession
+import login.voting.votingSession
 import navigation.AppNavType
 
 /**
@@ -66,8 +66,12 @@ fun loginOptionsScreen(
                             bottom = 12.dp
                         ),
                         onClick = {
-                            navItemState.value = AppNavType.LOGIN_VOTING
-                            votingSession()
+                            //TODO loading screen
+                            if(votingSession()) {
+                                navItemState.value = AppNavType.LOGIN_VOTING
+                            } else {
+                                TODO() //voting error screen & retry
+                            }
                         }
                     ){
                         Text(voteButtonText)

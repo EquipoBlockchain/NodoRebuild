@@ -8,8 +8,8 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 
 /**
- * This class allows to hold a [KeyPair] object initialized outside the constructor,
- * requiring to call generate() first.
+ * This class allows allocating a [KeyPair] object initialized outside the constructor, requiring to call [generate]
+ * first.
  *
  * Each key can only be obtained as a [ByteArray] resulting of its respective encoding.
  *

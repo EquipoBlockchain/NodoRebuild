@@ -5,6 +5,8 @@ import cryptography.asymmetric.signer
 import cryptography.asymmetric.verifier
 import cryptography.symmetric.*
 import fileAccess.*
+import fileAccess.fileTypeEVA.FileEVAReader
+import fileAccess.fileTypeEVA.createEVA
 import mu.KotlinLogging
 import java.io.File
 
@@ -27,9 +29,9 @@ fun isEVAValid(
     userPadded : ByteArray,
     id         : ByteArray
 ): Boolean {
-
-    val keyPairGeneratorInstance    = KeyPairGenerator()
+    val keyPairGeneratorInstance = KeyPairGenerator()
     keyPairGeneratorInstance.generate()
+
     publicKeyX509Encoded   = keyPairGeneratorInstance.getPublicKeyX509Encoded()
     privateKeyPKCS8Encoded = keyPairGeneratorInstance.getPrivateKeyPKCS8Encoded()
 
@@ -40,8 +42,7 @@ fun isEVAValid(
         )
     ) {
         logger.info { "Generated Key Pair is usable." }
-    }
-    else {
+    } else {
         logger.error { "Generated Key Pair is not usable." }
         return false
     }
@@ -59,8 +60,7 @@ fun isEVAValid(
         )
     ) {
         logger.info { "Encrypted key sizes match expected size." }
-    }
-    else {
+    } else {
         logger.error { "Encrypted key sizes do not match expected size." }
         return false
     }
@@ -75,8 +75,7 @@ fun isEVAValid(
         )
     ) {
         logger.info { "EVA creation correct." }
-    }
-    else {
+    } else {
         logger.error { "EVA creation encountered a problem." }
         return false
     }
@@ -92,8 +91,7 @@ fun isEVAValid(
         )
     ) {
         logger.info { "EVA decryption correct." }
-    }
-    else {
+    } else {
         logger.error { "EVA decryption encountered a problem." }
         return false
     }
@@ -109,7 +107,6 @@ fun isKeyPairValid(
     publicKeyX509Encoded   : ByteArray,
     privateKeyPKCS8Encoded : ByteArray
 ): Boolean {
-
     val message    = getExampleMessage()
 
     val signResult = signer(
@@ -184,7 +181,7 @@ fun isEVACreationValid(
     if(
         createEVA(
             file                         = file,
-            userPadded                         = userPadded,
+            userPadded                   = userPadded,
             id                           = id,
             salt                         = salt,
             initVectorBytes              = initVectorBytes,
@@ -199,6 +196,7 @@ fun isEVACreationValid(
 
 
 /**
+ * TODO Document
  * TODO Log
  * */
 fun isEVADecryptionValid(
@@ -253,10 +251,10 @@ fun isEVADecryptionValid(
     decipherPrivateKeyPKCS8Encoded = secretKeyDecryptInstance.plainBytes
 
     if (
-        userPaddedByteArray.contentEquals(userPaddedByteArrayFromEVA)                                         &&
-        idByteArray.contentEquals(idFromEVA)                                                   &&
-        salt.contentEquals(saltFromEVA)                                                        &&
-        initVectorBytes.contentEquals(initVectorBytesFromEVA)                                  &&
+        userPaddedByteArray.contentEquals(userPaddedByteArrayFromEVA)        &&
+        idByteArray.contentEquals(idFromEVA)                                 &&
+        salt.contentEquals(saltFromEVA)                                      &&
+        initVectorBytes.contentEquals(initVectorBytesFromEVA)                &&
         publicKeyX509Encoded.contentEquals(decipherPublicKeyX509Encoded)     &&
         privateKeyPKCS8Encoded.contentEquals(decipherPrivateKeyPKCS8Encoded)
     ){

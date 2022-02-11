@@ -13,11 +13,9 @@ fun isUserValid(
         (userSize > 16)
     ) {
         userState.value = UserState.INVALID_SIZE
-    }
-    else if (user.contains("[\\W]".toRegex())) {
+    } else if (user.contains("[\\W]".toRegex())) {
         userState.value = UserState.INVALID_CHAR
-    }
-    else {
+    } else {
         userState.value = UserState.VALID
     }
 

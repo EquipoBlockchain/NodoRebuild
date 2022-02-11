@@ -7,8 +7,8 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 
 /**
- * This class allows to hold a [SecretKey] object initialized outside the constructor,
- * requiring to call generate() first.
+ * This class allows allocating a [SecretKey] object initialized outside the constructor, requiring to call [generate]
+ * first.
  *
  * @see SecretKey
  */

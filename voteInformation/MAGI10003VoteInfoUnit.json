@@ -1,0 +1,26 @@
+{
+  "originID"    : 10003,
+  "timeStamp"   : "2022-02-05T00:36:43.168290100",
+  "entry"       :
+  {
+    "blockNumber" : 1,
+    "description" : "String",
+    "question"    : "¿Quién debe conducir el EVA?",
+    "options"     :
+    [
+      {
+        "optionNumber"     : 1,
+        "optionDefinition" : "Rei"
+      },
+      {
+        "optionNumber"     : 2,
+        "optionDefinition" : "Shinji"
+      },
+      {
+        "optionNumber"     : 3,
+        "optionDefinition" : "Milzort"
+      }
+    ]
+  },
+  "signature"   : "adoSTcMnrldL4W6dqr5080nlLQANZ7jZeu/+gQTmZvZf9Q8DxUl0NWU6AA3tibGXebp1SrahX2av2T1/VX4ZG6nDtA7V++mwV2Ead23++K2jOVpVOBPUurDqYQ1oE/yQPykmBz2VmfL4RJzGUF0cmq8Cwoq00HbEcjOVCzTqfB0="
+}

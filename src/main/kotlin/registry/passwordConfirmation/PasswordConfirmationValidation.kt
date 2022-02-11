@@ -9,8 +9,7 @@ fun isPasswordConfirmed(
 ) {
     if (password1 == password2) {
         passwordConfState.value = PasswordConfirmationState.EQUAL
-    }
-    else {
+    } else {
         passwordConfState.value = PasswordConfirmationState.NOT_EQUAL
     }
 }

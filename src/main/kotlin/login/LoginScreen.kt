@@ -35,16 +35,17 @@ fun loginScreen(
     colorPalette : Colors,
     navItemState : MutableState<AppNavType>
 ) {
-    var user        by remember { mutableStateOf("") }
-    var password    by remember { mutableStateOf("") }
-    var passVisible by remember { mutableStateOf(false) }
-
     val logButtonText = "Log in"
     val regButtonText = "Registrar"
 
     val eyeOutline    = painterResource("Icons/eye-outline.svg")
     val eyeOffOutline = painterResource("Icons/eye-off-outline.svg")
     val image         = painterResource("Icons/temp-icon.png")
+
+    var user        by remember { mutableStateOf("") }
+    var password    by remember { mutableStateOf("") }
+
+    var passVisible by remember { mutableStateOf(false) }
 
     MaterialTheme(
         colors = colorPalette

@@ -2,8 +2,8 @@ import cryptography.asymmetric.KeyPairGenerator
 import cryptography.asymmetric.signer
 import cryptography.asymmetric.verifier
 import cryptography.symmetric.*
-import fileAccess.FileEVAReader
-import fileAccess.createEVA
+import fileAccess.fileTypeEVA.FileEVAReader
+import fileAccess.fileTypeEVA.createEVA
 import fileAccess.getExampleMessage
 import java.io.BufferedReader
 import java.io.File

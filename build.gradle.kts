@@ -21,6 +21,7 @@ dependencies {
     implementation("org.bouncycastle:bcprov-jdk15on:1.69")
     implementation("io.github.microutils:kotlin-logging:2.1.21")
     implementation("ch.qos.logback:logback-classic:1.2.10")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
 }
 
 tasks.withType<KotlinCompile> {

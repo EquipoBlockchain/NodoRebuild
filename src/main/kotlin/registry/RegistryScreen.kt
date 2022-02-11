@@ -43,14 +43,6 @@ fun registryScreen(
     colorPalette: Colors,
     navItemState: MutableState<AppNavType>
 ) {
-    var user         by remember { mutableStateOf("") }
-    var id           by remember { mutableStateOf("") }
-    var password1    by remember { mutableStateOf("") }
-    var password2    by remember { mutableStateOf("") }
-
-    var passVisible1 by remember { mutableStateOf(false) }
-    var passVisible2 by remember { mutableStateOf(false) }
-
     val userState     = remember { mutableStateOf(UserState.EMPTY) }
     val idState       = remember { mutableStateOf(IdentifierState.EMPTY) }
     val passState     = remember { mutableStateOf(PasswordState.EMPTY) }
@@ -59,6 +51,14 @@ fun registryScreen(
     val eyeOutline    = painterResource("Icons/eye-outline.svg")
     val eyeOffOutline = painterResource("Icons/eye-off-outline.svg")
     val buttonText    = "Registrar"
+
+    var user         by remember { mutableStateOf("") }
+    var id           by remember { mutableStateOf("") }
+    var password1    by remember { mutableStateOf("") }
+    var password2    by remember { mutableStateOf("") }
+
+    var passVisible1 by remember { mutableStateOf(false) }
+    var passVisible2 by remember { mutableStateOf(false) }
 
     MaterialTheme(
         colors = colorPalette
