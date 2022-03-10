@@ -1,3 +1,19 @@
+/**
+ * Copyright 2021 Kyle Elbjorn
+ *
+ * This file is part of GEHIRN Node.
+ *
+ * GEHIRN Node is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * GEHIRN Node is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with GEHIRN Node.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package fileAccess.fileTypeEVA
 
 import cryptography.symmetric.SecretKeyDecrypt
@@ -17,7 +33,6 @@ private val logger = KotlinLogging.logger {}
  * - [publicKeyX509Encoded] is the Public Key encoded according to the X.509 standard, obtained by decrypting the file.
  * - [privateKeyPKCS8Encoded] is the Private Key encoded according to the PKCS #8 standard, obtained by decrypting the
  * file.
- *
  */
 class FileEVAKeyPairSync {
     private lateinit var idFromEVA              : ByteArray

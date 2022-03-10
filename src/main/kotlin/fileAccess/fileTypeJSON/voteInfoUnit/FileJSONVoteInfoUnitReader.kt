@@ -1,3 +1,19 @@
+/**
+ * Copyright 2021 Kyle Elbjorn
+ *
+ * This file is part of GEHIRN Node.
+ *
+ * GEHIRN Node is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * GEHIRN Node is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with GEHIRN Node.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package fileAccess.fileTypeJSON.voteInfoUnit
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -12,14 +28,14 @@ private val logger = KotlinLogging.logger {}
  * is assigned by calling [readJSONVoteInfoUnit].
  *
  * - [originID] represents the identifier of the node that sends the entry.
- * - [timeStamp] represents the date and time when the entry was generated.
+ * - [timestamp] represents the date and time when the entry was generated.
  * - [entry]
  * - [signature]
  */
 class FileJSONVoteInfoUnitReader {
     var originID : Int = 0
 
-    lateinit var timeStamp : String
+    lateinit var timestamp : String
     lateinit var entry     : VoteInfoUnitEntry
     lateinit var signature : String
 
@@ -41,12 +57,12 @@ class FileJSONVoteInfoUnitReader {
 
             val voteInfoUnit = jacksonObjectMapper().readValue<FileJSONVoteInfoUnitReader>(file)
             originID  = voteInfoUnit.originID
-            timeStamp = voteInfoUnit.timeStamp
+            timestamp = voteInfoUnit.timestamp
             entry     = voteInfoUnit.entry
             signature = voteInfoUnit.signature
 
             //TODO File update on old (compared to LocalDateTime.now())
-
+            //TODO Not initialized = Info error
             return true
         } else {
             logger.error { "${file.name} does not exist. File creation will be attempted." }

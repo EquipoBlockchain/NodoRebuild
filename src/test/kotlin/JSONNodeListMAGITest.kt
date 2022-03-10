@@ -16,7 +16,7 @@ fun main() {
             val fileJSONVoteInfoUnitReader = FileJSONVoteInfoUnitReader()
             if(fileJSONVoteInfoUnitReader.readJSONVoteInfoUnit(voteUnitFileName)) {
                 println(fileJSONVoteInfoUnitReader.originID)
-                println(fileJSONVoteInfoUnitReader.timeStamp)
+                println(fileJSONVoteInfoUnitReader.timestamp)
                 println(fileJSONVoteInfoUnitReader.entry.blockNumber)
                 println(fileJSONVoteInfoUnitReader.entry.description)
                 println(fileJSONVoteInfoUnitReader.entry.question)

@@ -1,3 +1,19 @@
+/**
+ * Copyright 2021 Kyle Elbjorn
+ *
+ * This file is part of GEHIRN Node.
+ *
+ * GEHIRN Node is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * GEHIRN Node is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with GEHIRN Node.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package fileAccess.fileTypeEVA
 
 import mu.KotlinLogging
@@ -37,11 +53,11 @@ fun createEVA(
         val directory = File(file.parentFile.toURI())
 
         if (directory.mkdir()) {
-            logger.info { "Directory: /${directory.name} was created" }
+            logger.info { "Directory: /${directory.name} was created." }
         } else if (directory.exists()) {
-            logger.info { "Directory: /${directory.name} already exists" }
+            logger.info { "Directory: /${directory.name} already exists." }
         } else {
-            logger.warn { "Directory: /${directory.name} failed to be created" }
+            logger.warn { "Directory: /${directory.name} failed to be created." }
         }
 
         if (file.createNewFile()) {
@@ -55,16 +71,16 @@ fun createEVA(
                 write(cipherPrivateKeyPKCS8Encoded)
                 close()
             }.onSuccess {
-                logger.info { "Writing to ${file.name} successful" }
+                logger.info { "Writing to ${file.name} successful." }
             }.onFailure { throwable ->
-                logger.error { "Writing to ${file.name} failed" }
+                logger.error { "Writing to ${file.name} failed." }
                 logger.error { throwable }
             }
             return true
         } else if (file.exists()) {
-            logger.warn { "File: ${file.name} already exists" }
+            logger.warn { "File: ${file.name} already exists." }
         } else {
-            logger.error { "File: ${file.name} could not be created" }
+            logger.error { "File: ${file.name} could not be created." }
         }
     }
     catch (throwable: Throwable) {
